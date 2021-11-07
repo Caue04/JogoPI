@@ -2,18 +2,20 @@
 
 //funções
 void sair();
+void blocos();
 void control();
+void mapa();
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
 struct obj{int wx, wy, x, y, w, h;};
 struct obj
 	p = {0,0,500,50,64,64,0,0},
-	bloco[13][15];
-
+	bloco[14][18];
+	
 //Variáveis Globais
 int sai    = 0;
 int width  = 900;
-int height = 720;
+int height = 700;
 int dir = 0;
 int nTile = 0;
 int vly = 0;
@@ -22,8 +24,8 @@ int caindo = 1;
 int pulando = 0;
 int vup = 15;
 int pLimit = 0;
-char mp[13][15];
-
+char mp[14][18];
+int out = -500;
 
 BITMAP *buffer, *imagem;
 
@@ -39,36 +41,24 @@ int main() {
 	set_gfx_mode(GFX_AUTODETECT_WINDOWED, width, height, 0, 0);
 	int i,j;
 
-	
 	//Variáveis Locais
 	buffer = create_bitmap(width, height);
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
 	
-	for(i = 0; i < 13; i++) 	{
-		for(j = 0; j < 15; j++){
-			bloco[i][j].y = 600;
-			bloco[i][j].x = j*60;
+	for(i = 0; i < 14; i++) 	{
+		for(j = 0; j < 18; j++){
+			bloco[i][j].y = i*50;
+			bloco[i][j].x = j*50;
 			bloco[i][j].w = 50;
 			bloco[i][j].h = 50;
 			bloco[i][j].wy =256;
-				
 		}
-	
 	}
-		
+		mapa();
 	while (!(sai || key[KEY_ESC]))
 	{		
+		blocos();
 		control();
-			for(i=0;i<13;i++){
-				for(j=0; j < 15; j++){
-						masked_blit(imagem,buffer,bloco[i][j].wx,bloco[i][j].wy,bloco[i][j].x,bloco[i][j].y,bloco[i][j].w,bloco[i][j].h);
-						if (colidir(p.x , p.y + 10, bloco[i][j].x, bloco[i][j].y, p.w, p.h, bloco[i][j].w, bloco[i][j].h)){
-						p.y = bloco[i][j].y - p.h;
-						caindo = 0;
-					}
-				}
-			}
-	
 		masked_blit(imagem, buffer, p.wx + nTile*64,p.wy + dir*64,p.x,p.y,p.w,p.h);
 		draw_sprite(screen, buffer, 0, 0);
 		rest(45);
@@ -82,8 +72,46 @@ int main() {
 }
 
 END_OF_MAIN();
-void sair(){sai= 1;}
-END_OF_FUNCTION(sair);
+
+void mapa(){
+	int i,j;
+	char map[14][18] = {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+						{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+						{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+						{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+						{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+						{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+						{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+						{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+						{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+						{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+						{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+						{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+						{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+						{3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3}};
+
+	for(i = 0; i < 14; i++){
+		for(j = 0; j < 18; j++){
+			if(map[i][j]) bloco[i][j].wx = (map[i][j] - 1) * bloco[i][j].w;
+			else bloco[i][j].x = out;
+			mp[i][j] = map[i][j];
+		}
+	}	
+}
+
+void blocos(){
+int i,j;			
+			for(i=0;i<14;i++){
+				for(j=0; j < 18; j++){
+						masked_blit(imagem,buffer,bloco[i][j].wx,bloco[i][j].wy,bloco[i][j].x,bloco[i][j].y,bloco[i][j].w,bloco[i][j].h);
+						if (colidir(p.x , p.y + 10, bloco[i][j].x, bloco[i][j].y, p.w, p.h, bloco[i][j].w, bloco[i][j].h)){
+						p.y = bloco[i][j].y - p.h;
+						caindo = 0;
+					}
+				}
+			}	
+	
+}
 
 void control(){
 	
@@ -127,4 +155,6 @@ int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh){
 		return 0;
 	
 	}	
-
+	
+void sair(){sai= 1;}
+END_OF_FUNCTION(sair);
