@@ -23,7 +23,7 @@ int pulando = 0;
 int vup = 15;
 int pLimit = 0;
 char mp[13][15];
-int i,j;
+
 
 BITMAP *buffer, *imagem;
 
@@ -37,6 +37,8 @@ int main() {
 	set_close_button_callback(sair);
 	install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL);  
 	set_gfx_mode(GFX_AUTODETECT_WINDOWED, width, height, 0, 0);
+	int i,j;
+
 	
 	//Variáveis Locais
 	buffer = create_bitmap(width, height);
@@ -60,12 +62,13 @@ int main() {
 			for(i=0;i<13;i++){
 				for(j=0; j < 15; j++){
 						masked_blit(imagem,buffer,bloco[i][j].wx,bloco[i][j].wy,bloco[i][j].x,bloco[i][j].y,bloco[i][j].w,bloco[i][j].h);
-						if (colidir(p.x + 10, p.y + 50, bloco[i][j].x, bloco[i][j].y, 64, 64, bloco[i][j].w, 10)){
+						if (colidir(p.x , p.y + 10, bloco[i][j].x, bloco[i][j].y, p.w, p.h, bloco[i][j].w, bloco[i][j].h)){
 						p.y = bloco[i][j].y - p.h;
 						caindo = 0;
 					}
 				}
 			}
+	
 		masked_blit(imagem, buffer, p.wx + nTile*64,p.wy + dir*64,p.x,p.y,p.w,p.h);
 		draw_sprite(screen, buffer, 0, 0);
 		rest(45);
@@ -84,15 +87,34 @@ END_OF_FUNCTION(sair);
 
 void control(){
 	
+	if(key[KEY_SPACE] && !pulando && !vly){
+		pLimit = p.y;
+		pulando = 1;
+	}
+	if(pulando || caindo){
+		if(key[KEY_RIGHT]){p.x+=10; dir = 3; nTile = 0; }	
+		else if(key[KEY_LEFT]){p.x-=10; dir = 2; nTile = 0;}	
+	} else {
 	if(key[KEY_RIGHT]){p.x+=10; dir = 0; nTile++;}
 	else if(key[KEY_LEFT]) {p.x-=10; dir = 1; nTile++;}
 	else nTile = 0;
 	if(nTile < 0) nTile = 6;
 	if(nTile > 6) nTile = 0;
 	
-	if(caindo) {
-	vly += grv;
-	p.y += vly;
+ }
+	if(pulando && p.y > pLimit - 30){
+			p.y += vly;
+			vly =- vup;
+			caindo = 1;
+		}
+	else if(caindo){
+		pulando = 0;
+		vly += grv;
+		p.y += vly;
+	}
+	else {
+		pulando = 0;
+		vly = 0;
 	}
 	caindo = 1;
 			
