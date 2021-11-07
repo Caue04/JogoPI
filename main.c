@@ -3,6 +3,7 @@
 //funções
 void sair();
 void control();
+int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
 struct obj{int wx, wy, x, y, w, h;};
 struct obj
@@ -15,6 +16,14 @@ int width  = 900;
 int height = 720;
 int dir = 0;
 int nTile = 0;
+int vly = 0;
+int grv = 4;
+int caindo = 1;
+int pulando = 0;
+int vup = 15;
+int pLimit = 0;
+char mp[13][15];
+int i,j;
 
 BITMAP *buffer, *imagem;
 
@@ -32,10 +41,31 @@ int main() {
 	//Variáveis Locais
 	buffer = create_bitmap(width, height);
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
+	
+	for(i = 0; i < 13; i++) 	{
+		for(j = 0; j < 15; j++){
+			bloco[i][j].y = 600;
+			bloco[i][j].x = j*60;
+			bloco[i][j].w = 50;
+			bloco[i][j].h = 50;
+			bloco[i][j].wy =256;
+				
+		}
+	
+	}
 		
 	while (!(sai || key[KEY_ESC]))
 	{		
 		control();
+			for(i=0;i<13;i++){
+				for(j=0; j < 15; j++){
+						masked_blit(imagem,buffer,bloco[i][j].wx,bloco[i][j].wy,bloco[i][j].x,bloco[i][j].y,bloco[i][j].w,bloco[i][j].h);
+						if (colidir(p.x + 10, p.y + 50, bloco[i][j].x, bloco[i][j].y, 64, 64, bloco[i][j].w, 10)){
+						p.y = bloco[i][j].y - p.h;
+						caindo = 0;
+					}
+				}
+			}
 		masked_blit(imagem, buffer, p.wx + nTile*64,p.wy + dir*64,p.x,p.y,p.w,p.h);
 		draw_sprite(screen, buffer, 0, 0);
 		rest(45);
@@ -60,5 +90,19 @@ void control(){
 	if(nTile < 0) nTile = 6;
 	if(nTile > 6) nTile = 0;
 	
+	if(caindo) {
+	vly += grv;
+	p.y += vly;
+	}
+	caindo = 1;
+			
 }
+
+int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh){
+	
+		if(Ax + Aw > Bx && Ax < Bx +Bw && Ay + Ah > By && Ay < By + Bh)
+		return 1;
+		return 0;
+	
+	}	
 
