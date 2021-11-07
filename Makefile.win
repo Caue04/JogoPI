@@ -1,0 +1,33 @@
+# Project: ProjetoJogo
+# Makefile created by Dev-C++ 4.9.9.3
+
+CPP      = g++.exe
+CC       = gcc.exe
+WINDRES  = windres.exe
+RES      = ProjetoJogo_private.res
+OBJ      = main.o $(RES)
+LINKOBJ  = main.o $(RES)
+LIBS     = -L"lib" -L"lib/gcc" -static-libstdc++ -static-libgcc -mwindows -lalleg_s -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lole32 -ldinput -lddraw -ldxguid -lwinmm -ldsound 
+INCS     = -I"include" 
+CXXINCS  = -I"include"  -I"include/sys"  -I"include/ddk"  -I"include/gdiplus"  -I"include/GL" 
+BIN      = ProjetoJogo.exe
+CXXFLAGS = $(CXXINCS) -DALLEGRO_STATICLINK 
+CFLAGS   = $(INCS) -DALLEGRO_STATICLINK 
+RM       = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before ProjetoJogo.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(LINKOBJ) -o "ProjetoJogo.exe" $(LIBS)
+
+main.o: main.c
+	$(CC) -c main.c -o main.o $(CFLAGS)
+
+ProjetoJogo_private.res: ProjetoJogo_private.rc 
+	$(WINDRES) -i ProjetoJogo_private.rc --input-format=rc -o ProjetoJogo_private.res -O coff 
