@@ -86,9 +86,9 @@ void mapa(){
 						{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 						{0,0,0,0,0,0,0,0,0,0,0,0,10,10,10,0,0,0},
-						{10,10,10,10,11,3,3,3,12,10,10,10,14,6,6,13,13,13},
-						{6,6,6,6,7,9,9,9,8,6,6,6,6,6,6,6,6,6},
-						{6,6,6,6,7,9,9,9,8,6,6,6,6,6,6,6,6,6}};
+						{10,10,10,10,10,3,3,3,10,10,10,10,6,6,6,13,13,13},
+						{6,6,6,6,6,9,9,9,6,6,6,6,6,6,6,6,6,6},
+						{6,6,6,6,6,9,9,9,6,6,6,6,6,6,6,6,6,6}};
 
 	for(i = 0; i < 14; i++){
 		for(j = 0; j < 18; j++){
@@ -104,9 +104,11 @@ int i,j;
 			for(i=0;i<14;i++){
 				for(j=0; j < 18; j++){
 						masked_blit(imagem,buffer,bloco[i][j].wx,bloco[i][j].wy,bloco[i][j].x,bloco[i][j].y,bloco[i][j].w,bloco[i][j].h);
-						if (colidir(p.x , p.y + 10, bloco[i][j].x, bloco[i][j].y, p.w, p.h, bloco[i][j].w, bloco[i][j].h)){
+						if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y, p.w-24,40 , bloco[i][j].w-24 ,10)){
+						if(mp[i][j] != 3 && mp[i][j] != 9 && mp[i][j] != 4 && mp[i][j] != 5 ){
 						p.y = bloco[i][j].y - p.h;
 						caindo = 0;
+						}
 					}
 				}
 			}	
@@ -130,7 +132,7 @@ void control(){
 	if(nTile > 6) nTile = 0;
 	
  }
-	if(pulando && p.y > pLimit - 30){
+	if(pulando && p.y > pLimit - 90){
 			p.y += vly;
 			vly =- vup;
 			caindo = 1;
@@ -150,9 +152,10 @@ void control(){
 
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh){
 	
-		if(Ax + Aw > Bx && Ax < Bx +Bw && Ay + Ah > By && Ay < By + Bh)
-		return 1;
+		if( (Ax > Bx + Bw ) || (Ay > By + Bh)|| (Bx > Ax + Aw) || (By > Ay + Ah))
 		return 0;
+		else
+		return 1;
 	
 	}	
 	
