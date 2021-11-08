@@ -26,6 +26,8 @@ int vup = 15;
 int pLimit = 0;
 char mp[14][18];
 int out = -500;
+int ataque = 0;
+int ult;
 
 BITMAP *buffer, *imagem;
 
@@ -105,7 +107,7 @@ int i,j;
 				for(j=0; j < 18; j++){
 						masked_blit(imagem,buffer,bloco[i][j].wx,bloco[i][j].wy,bloco[i][j].x,bloco[i][j].y,bloco[i][j].w,bloco[i][j].h);
 						if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y, p.w-24,40 , bloco[i][j].w-24 ,10)){
-						if(mp[i][j] != 3 && mp[i][j] != 9 && mp[i][j] != 4 && mp[i][j] != 5 ){
+						if(mp[i][j] != 3 && mp[i][j] != 9 && mp[i][j] != 4 && mp[i][j] != 5 && mp[i][j] != 2 && mp[i][j] != 18 ){
 						p.y = bloco[i][j].y - p.h;
 						caindo = 0;
 						}
@@ -117,13 +119,17 @@ int i,j;
 
 void control(){
 	
+	if(key[KEY_Z]){
+		ataque = 1;
+		}
+	
 	if(key[KEY_SPACE] && !pulando && !vly){
 		pLimit = p.y;
 		pulando = 1;
 	}
 	if(pulando || caindo){
-		if(key[KEY_RIGHT]){p.x+=10; dir = 3; nTile = 0; }	
-		else if(key[KEY_LEFT]){p.x-=10; dir = 2; nTile = 0;}	
+		if(key[KEY_RIGHT]){p.x+=10; dir = 0; nTile = 7; }	
+		else if(key[KEY_LEFT]){p.x-=10; dir = 1; nTile = 7;}	
 	} else {
 	if(key[KEY_RIGHT]){p.x+=10; dir = 0; nTile++;}
 	else if(key[KEY_LEFT]) {p.x-=10; dir = 1; nTile++;}
@@ -132,6 +138,35 @@ void control(){
 	if(nTile > 6) nTile = 0;
 	
  }
+ 	if(ataque && (key[KEY_RIGHT])){
+		dir = 3;nTile++;
+		pulando=0;
+		if(nTile < 0) nTile = 6;
+	    else 
+		ataque = 0;	
+	}
+	if(ataque && (key[KEY_LEFT]) ){
+		dir = 2;nTile++;
+		pulando=0;
+		
+		if(nTile < 0) nTile = 6;
+	    else 
+		ataque = 0;	
+	}
+	if(ataque && dir == 0){
+		dir = 3;nTile++;
+		 if(nTile >= 6) dir == 0;
+	    else 
+		ataque = 0;	
+	}
+	if(ataque && dir == 1){
+		dir = 2;nTile++;
+		 if(nTile >= 6) dir == 0;
+	    else 
+		ataque = 0;	
+	}
+
+	
 	if(pulando && p.y > pLimit - 90){
 			p.y += vly;
 			vly =- vup;
