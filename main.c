@@ -10,7 +10,7 @@ int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
 struct obj{int wx, wy, x, y, w, h;};
 struct obj
-	p = {0,0,500,500,64,64,0,0},
+	p = {0,0,0,500,64,64,0,0},
 	bloco[14][18];
 	
 //Variáveis Globais
@@ -89,7 +89,7 @@ END_OF_MAIN();
 void menu1(){
 	int time =0, flash = 0;
 	
-  	play_sample(som, 255, 128, 1000, 0);
+  	play_sample(som, 255, 128, 1000, 20);
 	
 	while (!(sai || key[KEY_ENTER] )){
 	
@@ -155,7 +155,7 @@ void control(){
 		str = 1;
 		}
 	
-	if(key[KEY_Z]){
+	if(key[KEY_Z]&& !pulando && caindo==0){
 		ataque = 1;
 		}
 	
@@ -174,14 +174,14 @@ void control(){
 	if(nTile > 6) nTile = 0;
 	
  }
- 	if(ataque && (key[KEY_RIGHT])){
+ 	if(ataque && (key[KEY_RIGHT])&& !pulando && caindo==0 ){
 		dir = 3;nTile++;
 		pulando=0;
 		if(nTile < 0) nTile = 6;
 	    else 
 		ataque = 0;	
 	}
-	if(ataque && (key[KEY_LEFT]) ){
+	if(ataque && (key[KEY_LEFT])&& !pulando && caindo==0 ){
 		dir = 2;nTile++;
 		pulando=0;
 		
@@ -189,21 +189,18 @@ void control(){
 	    else 
 		ataque = 0;	
 	}
-	if(ataque && dir == 0){
-		dir = 3;nTile++;
-		 if(nTile >= 6) dir == 0;
-	    else 
-		ataque = 0;	
-	}
-	if(ataque && dir == 1){
-		dir = 2;nTile++;
-		 if(nTile >= 6) dir == 0;
-	    else 
-		ataque = 0;	
+
+	if(ataque){
+		 if(dir==1)dir = 2;nTile=1;
+		 if(dir==0)dir = 3;nTile=1;
+		 if(nTile < 0 && dir==2) dir == 1;
+		 if(nTile < 0 && dir==3) dir == 0;
+		else
+		ataque =0;
 	}
 
 	
-	if(pulando && p.y > pLimit - 90){
+	if(pulando && p.y > pLimit - 50){
 			p.y += vly;
 			vly =- vup;
 			caindo = 1;
