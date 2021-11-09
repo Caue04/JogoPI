@@ -33,7 +33,7 @@ int str=0;
 int s1;
 
 BITMAP *buffer, *imagem, *menu;
-SAMPLE *som;
+SAMPLE *som, *ataqueS, *puloS;
 
 int main() {
 	
@@ -52,6 +52,8 @@ int main() {
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
 	menu   = load_bitmap("sprites/menu.bmp", NULL);
 	som    = load_sample("somMenu.wav");
+	ataqueS    = load_sample("ataque.wav");
+	puloS    = load_sample("pulo.wav");
 	
 	for(i = 0; i < 14; i++) 	{
 		for(j = 0; j < 18; j++){
@@ -81,6 +83,8 @@ int main() {
 	destroy_bitmap(menu);
 	destroy_bitmap(imagem);
 	destroy_sample(som);
+	destroy_sample(ataqueS);
+	destroy_sample(puloS);
 	return 0;
 }
 
@@ -89,7 +93,7 @@ END_OF_MAIN();
 void menu1(){
 	int time =0, flash = 0;
 	
-  	play_sample(som, 255, 128, 1000, 20);
+  	play_sample(som, 90, 110, 1000, 20);
 	
 	while (!(sai || key[KEY_ENTER] )){
 	
@@ -156,10 +160,12 @@ void control(){
 		}
 	
 	if(key[KEY_Z]&& !pulando && caindo==0){
+		play_sample(ataqueS,255,128,1000,0);
 		ataque = 1;
 		}
 	
 	if(key[KEY_SPACE] && !pulando && !vly){
+		play_sample(puloS,255,128,1000,0);
 		pLimit = p.y;
 		pulando = 1;
 	}
@@ -184,7 +190,6 @@ void control(){
 	if(ataque && (key[KEY_LEFT])&& !pulando && caindo==0 ){
 		dir = 2;nTile++;
 		pulando=0;
-		
 		if(nTile < 0) nTile = 6;
 	    else 
 		ataque = 0;	
