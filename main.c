@@ -5,11 +5,12 @@ void sair();
 void blocos();
 void control();
 void mapa();
+void menu1();
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
 struct obj{int wx, wy, x, y, w, h;};
 struct obj
-	p = {0,0,500,50,64,64,0,0},
+	p = {0,0,500,500,64,64,0,0},
 	bloco[14][18];
 	
 //Variáveis Globais
@@ -28,8 +29,11 @@ char mp[14][18];
 int out = -500;
 int ataque = 0;
 int ult;
+int str=0;
+int s1;
 
-BITMAP *buffer, *imagem;
+BITMAP *buffer, *imagem, *menu;
+SAMPLE *som;
 
 int main() {
 	
@@ -46,6 +50,8 @@ int main() {
 	//Variáveis Locais
 	buffer = create_bitmap(width, height);
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
+	menu   = load_bitmap("sprites/menu.bmp", NULL);
+	som    = load_sample("somMenu.wav");
 	
 	for(i = 0; i < 14; i++) 	{
 		for(j = 0; j < 18; j++){
@@ -59,21 +65,47 @@ int main() {
 		mapa();
 	while (!(sai || key[KEY_ESC]))
 	{		
+		
+		if(str == 0)menu1();
 		blocos();
 		control();
-		masked_blit(imagem, buffer, p.wx + nTile*64,p.wy + dir*64,p.x,p.y,p.w,p.h);
+		if(str == 1)masked_blit(imagem, buffer, p.wx + nTile*64,p.wy + dir*64,p.x,p.y,p.w,p.h);
 		draw_sprite(screen, buffer, 0, 0);
 		rest(45);
-		clear(buffer);	
-			
+		clear(buffer);
 	}
+			
+
 	//Finalização
 	destroy_bitmap(buffer);
+	destroy_bitmap(menu);
 	destroy_bitmap(imagem);
+	destroy_sample(som);
 	return 0;
 }
 
 END_OF_MAIN();
+
+void menu1(){
+	int time =0, flash = 0;
+	
+  	play_sample(som, 255, 128, 1000, 0);
+	
+	while (!(sai || key[KEY_ENTER] )){
+	
+	if (time > 20) time = 0;
+	
+	draw_sprite(buffer, menu,0,0);
+	if (time < 10)
+	
+	textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "APERTE ENTER PARA INICIAR", time);
+	draw_sprite(screen, buffer, 0, 0);
+	rest(100);
+	clear(buffer);	
+	time++;
+	}
+}
+
 
 void mapa(){
 	int i,j;
@@ -118,6 +150,10 @@ int i,j;
 }
 
 void control(){
+
+	if(key[KEY_ENTER]){
+		str = 1;
+		}
 	
 	if(key[KEY_Z]){
 		ataque = 1;
