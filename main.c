@@ -3,18 +3,20 @@
 //funções
 void sair();
 void blocos();
-void control();
+void control(); 
 void mapa();
 void menu1();
+void pause();
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
 struct obj{int wx, wy, x, y, w, h;};
 struct obj
-	p = {0,0,0,500,64,64,0,0},
+	p = {0,0,0,500,64,64},
 	bloco[14][18];
 	
 //Variáveis Globais
 int sai    = 0;
+int pausa = 0;
 int width  = 900;
 int height = 700;
 int dir = 0;
@@ -31,6 +33,7 @@ int ataque = 0;
 int ult;
 int str=0;
 int s1;
+
 
 BITMAP *buffer, *imagem, *menu;
 SAMPLE *som, *ataqueS, *puloS;
@@ -54,6 +57,7 @@ int main() {
 	som    = load_sample("somMenu.wav");
 	ataqueS    = load_sample("ataque.wav");
 	puloS    = load_sample("pulo.wav");
+	SAMPLE *sPause  = load_sample("pause.wav");
 	
 	for(i = 0; i < 14; i++) 	{
 		for(j = 0; j < 18; j++){
@@ -68,11 +72,17 @@ int main() {
 	while (!(sai || key[KEY_ESC]))
 	{		
 		
+		if(key[KEY_SPACE] && !pausa) {
+			pausa = 1;
+			play_sample(sPause, 225,128,1000,0);			
+		}
+		
 		if(str == 0)menu1();
 		blocos();
 		control();
 		if(str == 1)masked_blit(imagem, buffer, p.wx + nTile*64,p.wy + dir*64,p.x,p.y,p.w,p.h);
 		draw_sprite(screen, buffer, 0, 0);
+		pause();
 		rest(45);
 		clear(buffer);
 	}
@@ -90,6 +100,12 @@ int main() {
 
 END_OF_MAIN();
 
+void pause() {
+	while ( key[KEY_SPACE] && pausa);
+	while (!key[KEY_SPACE] && pausa && !(sai || key[KEY_ESC]));
+	pausa = 0;
+	while (key[KEY_SPACE] && !pausa);
+}
 void menu1(){
 	int time =0, flash = 0;
 	
@@ -116,13 +132,13 @@ void mapa(){
 	char map[14][18] = {{4,5,4,5,4,5,4,5,4,5,4,5,4,5,4,5,4,5},
 						{2,18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2,18},
 						{18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2},
-						{2,18,2,18,2,18,16,17,15,18,2,18,2,18,2,18,2,18},
+						{2,18,2,18,2,18,23,24,23,18,2,18,2,18,2,18,2,18},
 						{18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2},
-						{2,18,2,1,2,18,2,18,2,18,1,18,2,16,17,15,2,18},
+						{2,18,2,23,2,18,2,18,2,18,23,18,2,24,23,24,2,18},
 						{18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2},
-						{16,17,15,18,2,18,2,20,2,18,2,18,2,1,2,18,2,18},
-						{18,2,18,2,18,2,16,17,15,2,1,2,18,2,18,2,18,2},
-						{2,18,2,18,1,18,2,18,2,18,2,18,2,18,2,18,2,18},
+						{23,24,23,18,2,18,2,20,2,18,2,18,2,24,2,18,2,18},
+						{18,2,18,2,18,2,24,23,24,2,24,2,18,2,18,2,18,2},
+						{2,18,2,18,23,18,2,18,2,18,2,18,2,18,2,18,2,18},
 						{18,2,18,2,18,2,18,2,18,2,18,2,10,10,10,2,18,2},
 						{10,10,10,10,21,22,21,22,10,10,10,10,6,6,6,20,19,20},
 						{6,6,6,6,9,9,9,9,6,6,6,6,6,6,6,6,6,6},
@@ -164,7 +180,7 @@ void control(){
 		ataque = 1;
 		}
 	
-	if(key[KEY_SPACE] && !pulando && !vly){
+	if(key[KEY_UP] && !pulando && !vly){
 		play_sample(puloS,255,128,1000,0);
 		pLimit = p.y;
 		pulando = 1;
