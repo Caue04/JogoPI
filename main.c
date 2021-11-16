@@ -33,6 +33,8 @@ int ataque = 0;
 int ult;
 int str=0;
 int s1;
+int hp = 0; //variavel de vida do player
+int morreu = 1; 
 
 
 BITMAP *buffer, *imagem, *menu;
@@ -169,11 +171,34 @@ int i,j;
 	
 }
 
+void dano(){
+	hp--;
+	if(hp == 0){
+		stop_sample(som);
+		morreu = 1;
+		menu1();
+	}
+}
+
 void control(){
 
 	if(key[KEY_ENTER]){
 		str = 1;
-		}
+	}
+	
+	//TESTE SISTEMA DE HP
+	if(key[KEY_ENTER] && hp == 0 && morreu == 1){
+		hp = 3;
+		morreu = 0;
+	}	
+	if(hp > 0 && key[KEY_H])
+		dano();
+	//TESTE DANO AO CAIR
+	if(morreu == 0 && p.y > height+64){
+		dano();
+		p.y = 444;
+		p.x = 0;
+	}		
 	
 	if(key[KEY_Z]&& !pulando && caindo==0){
 		play_sample(ataqueS,255,128,1000,0);
