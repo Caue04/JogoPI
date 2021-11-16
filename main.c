@@ -33,7 +33,7 @@ int ataque = 0;
 int ult;
 int str=0;
 int s1;
-int hp = 0; //variavel de vida do player
+int hp = 3; //variavel de vida do player
 int morreu = 1; 
 
 
@@ -172,10 +172,14 @@ int i,j;
 }
 
 void dano(){
-	hp--;
+	if(hp > 0)
+		hp--;
 	if(hp == 0){
 		stop_sample(som);
 		morreu = 1;
+		p.y = 444;
+		p.x = 0;
+		hp = 3;
 		menu1();
 	}
 }
@@ -185,19 +189,18 @@ void control(){
 	if(key[KEY_ENTER]){
 		str = 1;
 	}
-	
+	textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "HP = %d", hp , time);
 	//TESTE SISTEMA DE HP
-	if(key[KEY_ENTER] && hp == 0 && morreu == 1){
-		hp = 3;
+	if(key[KEY_ENTER] && hp == 3 && morreu == 1){
 		morreu = 0;
 	}	
 	if(hp > 0 && key[KEY_H])
 		dano();
 	//TESTE DANO AO CAIR
 	if(morreu == 0 && p.y > height+64){
-		dano();
 		p.y = 444;
 		p.x = 0;
+		dano();	
 	}		
 	
 	if(key[KEY_Z]&& !pulando && caindo==0){
