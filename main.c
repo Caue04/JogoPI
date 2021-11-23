@@ -7,11 +7,16 @@ void control();
 void mapa();
 void menu1();
 void pause();
+void aranha1();
+void aranha2();
+
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
 struct obj{int wx, wy, x, y, w, h;};
 struct obj
 	p = {0,0,0,500,64,64},
+	ar = {0,0,380,500,64,64},
+	ar2 = {0,0,630,200,64,64},
 	bloco[14][18];
 	
 //Variáveis Globais
@@ -35,9 +40,10 @@ int str=0;
 int s1;
 int hp = 3; //variavel de vida do player
 int morreu = 1; 
+int andart = 0;
 
 
-BITMAP *buffer, *imagem, *menu;
+BITMAP *buffer, *imagem, *menu, *aranha;
 SAMPLE *som, *ataqueS, *puloS;
 
 int main() {
@@ -55,6 +61,7 @@ int main() {
 	//Variáveis Locais
 	buffer = create_bitmap(width, height);
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
+	aranha = load_bitmap("sprites/spider.bmp", NULL);
 	menu   = load_bitmap("sprites/menu.bmp", NULL);
 	som    = load_sample("somMenu.wav");
 	ataqueS    = load_sample("ataque.wav");
@@ -83,6 +90,8 @@ int main() {
 		blocos();
 		control();
 		if(str == 1)masked_blit(imagem, buffer, p.wx + nTile*64,p.wy + dir*64,p.x,p.y,p.w,p.h);
+		aranha1();
+		aranha2();
 		draw_sprite(screen, buffer, 0, 0);
 		pause();
 		rest(45);
@@ -101,6 +110,20 @@ int main() {
 }
 
 END_OF_MAIN();
+void aranha1() {
+	if(ar.x < 550)ar.x += 7;
+		else
+		ar.x = 380;
+		masked_blit(aranha, buffer, ar.wx,ar.wy,ar.x,ar.y,ar.w,ar.h);
+	
+	}
+	void aranha2() {
+	if(ar2.x < 750)ar2.x += 5;
+		else
+		ar2.x = 630;
+		masked_blit(aranha, buffer, ar2.wx,ar2.wy,ar2.x,ar2.y,ar2.w,ar2.h);
+	
+	}
 
 void pause() {
 	while ( key[KEY_SPACE] && pausa);
