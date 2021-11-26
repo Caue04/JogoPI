@@ -9,15 +9,19 @@ void menu1();
 void pause();
 void aranha1();
 void aranha2();
+void dano();
 
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
 struct obj{int wx, wy, x, y, w, h;};
 struct obj
 	p = {0,0,0,500,64,64},
-	ar = {0,0,380,500,64,64},
-	ar2 = {0,0,630,200,64,64},
 	bloco[14][18];
+
+struct inimigo{int wx, wy, x, y, w, h, iniDir, iniEsq, iniHp;};
+struct inimigo
+	ar = {0,0,380,500,64,64,1,0,5},
+	ar2 = {0,0,630,200,64,64,0,1,5};
 	
 //Variáveis Globais
 int sai    = 0;
@@ -41,6 +45,7 @@ int s1;
 int hp = 3; //variavel de vida do player
 int morreu = 1; 
 int andart = 0;
+
 
 
 BITMAP *buffer, *imagem, *menu, *aranha;
@@ -110,20 +115,37 @@ int main() {
 }
 
 END_OF_MAIN();
+
 void aranha1() {
-	if(ar.x < 550)ar.x += 7;
-		else
-		ar.x = 380;
-		masked_blit(aranha, buffer, ar.wx,ar.wy,ar.x,ar.y,ar.w,ar.h);
-	
+	if(ar.x < 550 && ar.iniDir == 1)
+		ar.x += 10;
+	else if(ar.x == 550){
+		ar.iniDir = 0;
+		ar.iniEsq = 1;
 	}
-	void aranha2() {
-	if(ar2.x < 750)ar2.x += 5;
-		else
-		ar2.x = 630;
-		masked_blit(aranha, buffer, ar2.wx,ar2.wy,ar2.x,ar2.y,ar2.w,ar2.h);
-	
+	if(ar.x > 380 && ar.iniEsq == 1)
+		ar.x -= 10;
+	else if(ar.x == 380){
+		ar.iniEsq = 0;
+		ar.iniDir = 1;
 	}
+	masked_blit(aranha, buffer, ar.wx,ar.wy,ar.x,ar.y,ar.w,ar.h);
+}
+void aranha2() {
+	if(ar2.x < 750 && ar2.iniDir == 1)
+		ar2.x += 10;
+	else if(ar2.x == 750){
+		ar2.iniDir = 0;
+		ar2.iniEsq = 1;
+	}
+	if(ar2.x > 630 && ar2.iniEsq == 1)
+		ar2.x -= 10;
+	else if(ar2.x == 630){
+		ar2.iniEsq = 0;
+		ar2.iniDir = 1;
+	}
+	masked_blit(aranha, buffer, ar2.wx,ar2.wy,ar2.x,ar2.y,ar2.w,ar2.h);	
+}
 
 void pause() {
 	while ( key[KEY_SPACE] && pausa);
