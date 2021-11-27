@@ -18,6 +18,7 @@ void pause();
 void aranha1();
 void aranha2();
 void dano();
+void hpicon();
 
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
@@ -56,7 +57,7 @@ int marcadorAtq;
 int iFrame;
 int marcador;
 
-BITMAP *buffer, *imagem, *menu, *aranha;
+BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3;
 SAMPLE *som, *ataqueS, *puloS;
 
 int main() {
@@ -75,6 +76,9 @@ int main() {
 	buffer = create_bitmap(width, height);
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
 	aranha = load_bitmap("sprites/spider.bmp", NULL);
+	vida1  = load_bitmap("sprites/HP1.bmp" , NULL);
+	vida2  = load_bitmap("sprites/HP2.bmp" , NULL);
+	vida3  = load_bitmap("sprites/HP3.bmp" , NULL);
 		
 		//SET TIMER
 		msecs = 0;
@@ -112,6 +116,7 @@ int main() {
 		if(str == 1)masked_blit(imagem, buffer, p.wx + nTile*64,p.wy + dir*64,p.x,p.y,p.w,p.h);
 		aranha1();
 		aranha2();
+		hpicon();
 		draw_sprite(screen, buffer, 0, 0);
 		pause();
 		rest(45);
@@ -123,6 +128,9 @@ int main() {
 	destroy_bitmap(buffer);
 	destroy_bitmap(menu);
 	destroy_bitmap(imagem);
+	destroy_bitmap(vida1);
+	destroy_bitmap(vida2);
+	destroy_bitmap(vida3);
 	destroy_bitmap(aranha);
 	destroy_sample(som);
 	destroy_sample(ataqueS);
@@ -131,6 +139,13 @@ int main() {
 }
 
 END_OF_MAIN();
+
+void hpicon() {
+	if (hp == 3)draw_sprite(buffer, vida3, 830, 30);
+	if (hp == 2)draw_sprite(buffer, vida2, 830, 30);
+	if (hp == 1)draw_sprite(buffer, vida1, 830, 30);	
+}
+
 
 void aranha1() {
 	//MOVIMENTO
