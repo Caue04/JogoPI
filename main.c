@@ -55,7 +55,8 @@ int hp = 3; //variavel de vida do player
 int morreu = 1; 
 int marcadorAtq;
 int iFrame;
-int marcador;
+int marcador, marcadorS;
+int ctn;
 
 BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3;
 SAMPLE *som, *ataqueS, *puloS;
@@ -72,6 +73,7 @@ int main() {
 	set_gfx_mode(GFX_AUTODETECT_WINDOWED, width, height, 0, 0);
 	int i,j;
 	marcador = msecs;
+	marcadorS = msecs;
 	//Variáveis Locais
 	buffer = create_bitmap(width, height);
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
@@ -295,11 +297,15 @@ void control(){
 	textprintf_centre_ex(buffer, font, 100, 220, 0xffffff,-1, "Ar2 HP:%d", ar2.iniHp);
 	textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "HP = %d", hp , time);
 	
-	if(key[KEY_M]){
-			stop_sample(som);
+	if(key[KEY_M] && msecs - marcadorS >= 750 ){
+		marcadorS = msecs;
+		stop_sample(som);
+		ctn = 0;
 	}
-	if(key[KEY_N]){
-		play_sample(som, 90, 110, 1000, 10);
+	if(key[KEY_N]&& msecs - marcadorS >= 750 ){
+		marcadorS = msecs;
+		ctn++;
+		if(ctn <= 1)play_sample(som, 90, 110, 1000, 10);
 	}
 	
 	if(key[KEY_ENTER]){
