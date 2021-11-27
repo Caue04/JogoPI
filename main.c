@@ -54,6 +54,7 @@ int hp = 3; //variavel de vida do player
 int morreu = 1; 
 int marcadorAtq;
 int iFrame;
+int marcador;
 
 BITMAP *buffer, *imagem, *menu, *aranha;
 SAMPLE *som, *ataqueS, *puloS;
@@ -69,7 +70,7 @@ int main() {
 	install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL);  
 	set_gfx_mode(GFX_AUTODETECT_WINDOWED, width, height, 0, 0);
 	int i,j;
-
+	marcador = msecs;
 	//Variáveis Locais
 	buffer = create_bitmap(width, height);
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
@@ -241,7 +242,7 @@ int i,j;
 			for(i=0;i<14;i++){
 				for(j=0; j < 18; j++){
 						masked_blit(imagem,buffer,bloco[i][j].wx,bloco[i][j].wy,bloco[i][j].x,bloco[i][j].y,bloco[i][j].w,bloco[i][j].h);
-						if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y, p.w-24,40 , bloco[i][j].w-24 ,10)){
+						if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y, p.w-24,40 , bloco[i][j].w-24 ,50)){
 						if(mp[i][j] != 3 && mp[i][j] != 9 && mp[i][j] != 4 && mp[i][j] != 5 && mp[i][j] != 2 && mp[i][j] != 18 && mp[i][j] != 21 && mp[i][j] != 22 ){
 						p.y = bloco[i][j].y - p.h;
 						caindo = 0;
@@ -264,6 +265,7 @@ void dano(){
 		msecs = 0;
 		iFrame = 0;
 		marcadorAtq = 0;
+		marcador = 0;
 		ar.iniHp = 5;
 		ar2.iniHp = 5;
 		menu1();
@@ -294,8 +296,9 @@ void control(){
 		dano();	
 	}		
 	
-	if(key[KEY_Z]&& !pulando && caindo==0){
+	if(msecs - marcador >= 450 && key[KEY_Z]&& !pulando && caindo==0){
 		marcadorAtq = msecs;
+		marcador = msecs;
 		play_sample(ataqueS,255,128,1000,0);
 		ataque = 1;
 		}
@@ -316,21 +319,7 @@ void control(){
 	if(nTile > 6) nTile = 0;
 	
  }
- 	if(ataque && (key[KEY_RIGHT])&& !pulando && caindo==0 ){
-		dir = 3;nTile++;
-		pulando=0;
-		if(nTile < 0) nTile = 6;
-	    else 
-		ataque = 0;	
-	}
-	if(ataque && (key[KEY_LEFT])&& !pulando && caindo==0 ){
-		dir = 2;nTile++;
-		pulando=0;
-		if(nTile < 0) nTile = 6;
-	    else 
-		ataque = 0;	
-	}
-
+ 	
 	if(ataque){
 		 if(dir==1)dir = 2;nTile=1;
 		 if(dir==0)dir = 3;nTile=1;
