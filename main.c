@@ -208,7 +208,8 @@ void pause() {
 void menu1(){
 	int time =0, flash = 0;
 	
-  	play_sample(som, 90, 110, 1000, 20);
+  		play_sample(som, 90, 110, 1000, 10);
+		
 	
 	while (!(sai || key[KEY_ENTER] )){
 	
@@ -293,6 +294,13 @@ void control(){
 	textprintf_centre_ex(buffer, font, 100, 200, 0xffffff,-1, "Ar1 HP:%d", ar.iniHp);
 	textprintf_centre_ex(buffer, font, 100, 220, 0xffffff,-1, "Ar2 HP:%d", ar2.iniHp);
 	textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "HP = %d", hp , time);
+	
+	if(key[KEY_M]){
+			stop_sample(som);
+	}
+	if(key[KEY_N]){
+		play_sample(som, 90, 110, 1000, 10);
+	}
 	
 	if(key[KEY_ENTER]){
 		str = 1;

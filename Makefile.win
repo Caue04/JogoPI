@@ -4,7 +4,7 @@
 CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
-RES      = 
+RES      = ProjetoJogo_private.res
 OBJ      = main.o $(RES)
 LINKOBJ  = main.o $(RES)
 LIBS     = -L"lib" -L"lib/gcc" -static-libstdc++ -static-libgcc -mwindows -lalleg_s -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lole32 -ldinput -lddraw -ldxguid -lwinmm -ldsound 
@@ -28,3 +28,6 @@ $(BIN): $(OBJ)
 
 main.o: main.c
 	$(CC) -c main.c -o main.o $(CFLAGS)
+
+ProjetoJogo_private.res: ProjetoJogo_private.rc 
+	$(WINDRES) -i ProjetoJogo_private.rc --input-format=rc -o ProjetoJogo_private.res -O coff 
