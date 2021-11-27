@@ -1,6 +1,14 @@
 #include <allegro.h>
 
 //funções
+
+//TIMER
+volatile int msecs;
+void msecsCount(){
+	msecs++;
+}
+END_OF_FUNCTION(milisecsCount)
+
 void sair();
 void blocos();
 void control(); 
@@ -44,9 +52,8 @@ int str=0;
 int s1;
 int hp = 3; //variavel de vida do player
 int morreu = 1; 
-int andart = 0;
-
-
+int marcadorAtq;
+int iFrame;
 
 BITMAP *buffer, *imagem, *menu, *aranha;
 SAMPLE *som, *ataqueS, *puloS;
@@ -67,6 +74,13 @@ int main() {
 	buffer = create_bitmap(width, height);
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
 	aranha = load_bitmap("sprites/spider.bmp", NULL);
+		
+		//SET TIMER
+		msecs = 0;
+		LOCK_FUNCTION(msecsCount);
+		LOCK_VARIABLE(msecs);
+		install_int_ex(msecsCount, MSEC_TO_TIMER(1));
+
 	menu   = load_bitmap("sprites/menu.bmp", NULL);
 	som    = load_sample("somMenu.wav");
 	ataqueS    = load_sample("ataque.wav");
@@ -108,6 +122,7 @@ int main() {
 	destroy_bitmap(buffer);
 	destroy_bitmap(menu);
 	destroy_bitmap(imagem);
+	destroy_bitmap(aranha);
 	destroy_sample(som);
 	destroy_sample(ataqueS);
 	destroy_sample(puloS);
@@ -117,6 +132,7 @@ int main() {
 END_OF_MAIN();
 
 void aranha1() {
+	//MOVIMENTO
 	if(ar.x < 550 && ar.iniDir == 1)
 		ar.x += 10;
 	else if(ar.x == 550){
@@ -129,9 +145,20 @@ void aranha1() {
 		ar.iniEsq = 0;
 		ar.iniDir = 1;
 	}
-	masked_blit(aranha, buffer, ar.wx,ar.wy,ar.x,ar.y,ar.w,ar.h);
+	//COLISÃO PLAYER e DANO
+	if (colidir(p.x + 20, p.y + 31 , ar.x + 15 , ar.y + 19, 24 , 35 , 30 , 36) && msecs - iFrame >= 1000 && ar.iniHp > 0){
+		iFrame = msecs;
+		dano();
+	}
+	if (colidir(p.x, p.y + 31 , ar.x + 15 , ar.y + 19, 24 , 35 , 30 , 36) && key[KEY_Z])
+		ar.iniHp--;
+	
+	//DRAW
+	if(ar.iniHp > 0)
+		masked_blit(aranha, buffer, ar.wx,ar.wy,ar.x,ar.y,ar.w,ar.h);		
 }
 void aranha2() {
+	//MOVIMENTO
 	if(ar2.x < 750 && ar2.iniDir == 1)
 		ar2.x += 10;
 	else if(ar2.x == 750){
@@ -144,7 +171,16 @@ void aranha2() {
 		ar2.iniEsq = 0;
 		ar2.iniDir = 1;
 	}
-	masked_blit(aranha, buffer, ar2.wx,ar2.wy,ar2.x,ar2.y,ar2.w,ar2.h);	
+	//COLISÃO PLAYER e DANO
+	if (colidir(p.x + 20, p.y + 31 , ar2.x + 15 , ar2.y + 19, 24 , 35 , 30 , 36) && msecs - iFrame >= 1000 && ar2.iniHp > 0){
+		iFrame = msecs;
+		dano();
+	}
+	if (colidir(p.x, p.y + 31 , ar2.x + 15 , ar2.y + 19, 24 , 35 , 30 , 36) && key[KEY_Z])
+		ar2.iniHp--;
+	//DRAW
+	if(ar2.iniHp > 0)
+		masked_blit(aranha, buffer, ar2.wx,ar2.wy,ar2.x,ar2.y,ar2.w,ar2.h);	
 }
 
 void pause() {
@@ -225,23 +261,33 @@ void dano(){
 		p.y = 444;
 		p.x = 0;
 		hp = 3;
+		msecs = 0;
+		iFrame = 0;
+		marcadorAtq = 0;
+		ar.iniHp = 5;
+		ar2.iniHp = 5;
 		menu1();
 	}
 }
 
 void control(){
-
+	//printsDEBUG
+	textprintf_centre_ex(buffer, font, 100, 100, 0xffffff,-1, "Timer:%d", msecs);
+	textprintf_centre_ex(buffer, font, 100, 200, 0xffffff,-1, "Ar1 HP:%d", ar.iniHp);
+	textprintf_centre_ex(buffer, font, 100, 220, 0xffffff,-1, "Ar2 HP:%d", ar2.iniHp);
+	textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "HP = %d", hp , time);
+	
 	if(key[KEY_ENTER]){
 		str = 1;
 	}
 	textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "HP = %d", hp , time);
-	//TESTE SISTEMA DE HP
+	//SISTEMA DE HP
 	if(key[KEY_ENTER] && hp == 3 && morreu == 1){
 		morreu = 0;
 	}	
 	if(hp > 0 && key[KEY_H])
 		dano();
-	//TESTE DANO AO CAIR
+	//DANO AO CAIR
 	if(morreu == 0 && p.y > height+64){
 		p.y = 444;
 		p.x = 0;
@@ -249,6 +295,7 @@ void control(){
 	}		
 	
 	if(key[KEY_Z]&& !pulando && caindo==0){
+		marcadorAtq = msecs;
 		play_sample(ataqueS,255,128,1000,0);
 		ataque = 1;
 		}
