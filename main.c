@@ -58,7 +58,7 @@ int iFrame;
 int marcador, marcadorS;
 int ctn;
 
-BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3;
+BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar;
 SAMPLE *som, *ataqueS, *puloS;
 
 int main() {
@@ -81,6 +81,7 @@ int main() {
 	vida1  = load_bitmap("sprites/HP1.bmp" , NULL);
 	vida2  = load_bitmap("sprites/HP2.bmp" , NULL);
 	vida3  = load_bitmap("sprites/HP3.bmp" , NULL);
+	pausar = load_bitmap("sprites/pause.bmp", NULL);
 		
 		//SET TIMER
 		msecs = 0;
@@ -134,6 +135,7 @@ int main() {
 	destroy_bitmap(vida2);
 	destroy_bitmap(vida3);
 	destroy_bitmap(aranha);
+	destroy_bitmap(pausar);
 	destroy_sample(som);
 	destroy_sample(ataqueS);
 	destroy_sample(puloS);
@@ -202,7 +204,9 @@ void aranha2() {
 }
 
 void pause() {
-	while ( key[KEY_SPACE] && pausa);
+	while ( key[KEY_SPACE] && pausa) {
+		draw_sprite(pausar, buffer, 0, 0);
+	}
 	while (!key[KEY_SPACE] && pausa && !(sai || key[KEY_ESC]));
 	pausa = 0;
 	while (key[KEY_SPACE] && !pausa);
