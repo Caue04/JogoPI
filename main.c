@@ -222,6 +222,8 @@ void aranha1() {
 	//DRAW
 	if(ar.iniHp > 0) 
 		masked_blit(aranha, buffer, ar.wx,ar.wy,ar.x,ar.y,ar.w,ar.h);
+	
+	textprintf_centre_ex(buffer, font, 100, 220, 0xffffff,-1, "p.y:%d", p.y);
 		
 			
 
@@ -338,46 +340,57 @@ void mapa2(){
 }
 
 void blocos(){
-int i,j;			
-		for(i=0;i<14;i++){
-				for(j=0; j < 18; j++){
-						masked_blit(imagem,buffer,bloco[i][j].wx,bloco[i][j].wy,bloco[i][j].x,bloco[i][j].y,bloco[i][j].w,bloco[i][j].h);
-						if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y, p.w-24,40 , bloco[i][j].w-24 ,50)){
-							if(mp[i][j] != 3 && mp[i][j] != 9 && mp[i][j] != 4 && mp[i][j] != 5 && mp[i][j] != 2 && mp[i][j] != 18 && mp[i][j] != 19 && mp[i][j] != 20 && mp[i][j] != 21 && mp[i][j] != 22){
-								p.y = bloco[i][j].y - p.h;
-								caindo = 0;
-							}
-							else if(mp[i][j] == 19 || mp[i][j] == 20){
-								if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y + 30, p.w-24,40 , bloco[i][j].w-24 ,50)){
-									caindo = 0;
-									respawn();
-								}
-							}
-						}
-					}
+	int i,j;			
+	for(i=0;i<14;i++){
+		for(j=0; j < 18; j++){
+			masked_blit(imagem,buffer,bloco[i][j].wx,bloco[i][j].wy,bloco[i][j].x,bloco[i][j].y,bloco[i][j].w,bloco[i][j].h);
+			if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y, p.w-24,40 , bloco[i][j].w-24 ,50) && p.y >= 486 && !pulando){
+				if(mp[i][j] != 3 && mp[i][j] != 9 && mp[i][j] != 4 && mp[i][j] != 5 && mp[i][j] != 2 && mp[i][j] != 18 && mp[i][j] != 19 && mp[i][j] != 20 && mp[i][j] != 21 && mp[i][j] != 22){
+					p.y = bloco[i][j].y - p.h;
+					caindo = 0;
+				}
+			}
+			else if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y, p.w-24,40 , bloco[i][j].w-24 ,1) && p.y <= 486 && !pulando){
+				if(mp[i][j] != 3 && mp[i][j] != 9 && mp[i][j] != 4 && mp[i][j] != 5 && mp[i][j] != 2 && mp[i][j] != 18 && mp[i][j] != 19 && mp[i][j] != 20 && mp[i][j] != 21 && mp[i][j] != 22){
+					p.y = bloco[i][j].y - p.h;
+					caindo = 0;
 				}
 			}	
-	
+			if(mp[i][j] == 19 || mp[i][j] == 20){
+				if (colidir(p.x, p.y+30 , bloco[i][j].x + 5 , bloco[i][j].y + 30, p.w-24,40 , bloco[i][j].w-30 ,50)){
+					caindo = 0;
+					respawn();
+				}
+			}		
+		}
+	}	
+}
 
 void blocos2(){
-int i,j;			
-			for(i=0;i<14;i++){
-				for(j=0; j < 18; j++){
-						masked_blit(imagem,buffer,bloco2[i][j].wx,bloco2[i][j].wy,bloco2[i][j].x,bloco2[i][j].y,bloco2[i][j].w,bloco2[i][j].h);
-						if (colidir(p.x, p.y+30 , bloco2[i][j].x , bloco2[i][j].y, p.w-24,40 , bloco2[i][j].w-24 ,50)){
-							if(mp2[i][j] != 3 && mp2[i][j] != 9 && mp2[i][j] != 4 && mp2[i][j] != 5 && mp2[i][j] != 2 && mp2[i][j] != 18 && mp2[i][j] != 19 && mp2[i][j] != 20 && mp2[i][j] != 21 && mp2[i][j] != 22){
-								p.y = bloco2[i][j].y - p.h;
-								caindo = 0;
-						}
-						else if(mp2[i][j] == 19 || mp2[i][j] == 20){
-								if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y + 30, p.w-24,40 , bloco[i][j].w-24 ,50)){
-									caindo = 0;
-									respawn();
-								}
-						}
-					}
+	int i,j;			
+	for(i=0;i<14;i++){
+		for(j=0; j < 18; j++){
+			masked_blit(imagem,buffer,bloco2[i][j].wx,bloco2[i][j].wy,bloco2[i][j].x,bloco2[i][j].y,bloco2[i][j].w,bloco2[i][j].h);
+			if (colidir(p.x, p.y+30 , bloco2[i][j].x , bloco2[i][j].y, p.w-24,40 , bloco2[i][j].w-24 ,50) && p.y >= 486 && !pulando){
+				if(mp2[i][j] != 3 && mp2[i][j] != 9 && mp2[i][j] != 4 && mp2[i][j] != 5 && mp2[i][j] != 2 && mp2[i][j] != 18 && mp2[i][j] != 19 && mp2[i][j] != 20 && mp2[i][j] != 21 && mp2[i][j] != 22){
+					p.y = bloco2[i][j].y - p.h;
+					caindo = 0;
 				}
-			}	
+			}
+			else if (colidir(p.x, p.y+30 , bloco2[i][j].x , bloco2[i][j].y, p.w-24,40 , bloco2[i][j].w-24 ,1) && p.y <= 486 && !pulando){
+				if(mp2[i][j] != 3 && mp2[i][j] != 9 && mp2[i][j] != 4 && mp2[i][j] != 5 && mp2[i][j] != 2 && mp2[i][j] != 18 && mp2[i][j] != 19 && mp2[i][j] != 20 && mp2[i][j] != 21 && mp2[i][j] != 22){
+					p.y = bloco2[i][j].y - p.h;
+					caindo = 0;
+				}
+			}		
+			if(mp2[i][j] == 19 || mp2[i][j] == 20){
+				if (colidir(p.x, p.y+30 , bloco2[i][j].x + 5, bloco2[i][j].y + 30, p.w-24,40 , bloco2[i][j].w-30 ,50)){
+					caindo = 0;
+					respawn();
+				}
+			}
+		}
+	}	
 }
 
 void dano(){
