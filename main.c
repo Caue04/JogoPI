@@ -88,6 +88,7 @@ int main() {
 	//Variáveis Locais
 	buffer = create_bitmap(width, height);
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
+	pausar = load_bitmap("sprites/pause.bmp", NULL);
 	moeda  = load_bitmap("sprites/coin.bmp", NULL);
 	aranha = load_bitmap("sprites/spider.bmp", NULL);
 	vida1  = load_bitmap("sprites/HP1.bmp" , NULL);
@@ -148,6 +149,7 @@ int main() {
 		aranha1();
 		aranha2();
 		hpicon();
+		if(pausa == 1)draw_sprite(buffer, pausar,0,0);
 		draw_sprite(screen, buffer, 0, 0);
 		pause();
 		rest(45);
@@ -250,7 +252,7 @@ void aranha2() {
 
 void pause() {
 	while ( key[KEY_SPACE] && pausa) {
-		draw_sprite(pausar, buffer, 0, 0);
+		draw_sprite(buffer, pausar, 0, 0);
 	}
 	while (!key[KEY_SPACE] && pausa && !(sai || key[KEY_ESC]));
 	pausa = 0;
