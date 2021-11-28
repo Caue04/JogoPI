@@ -27,10 +27,10 @@ struct obj
 	p = {0,0,0,500,64,64},
 	bloco[14][18];
 
-struct inimigo{int wx, wy, x, y, w, h, iniDir, iniEsq, iniHp;};
+struct inimigo{int wx, wy, x, y, w, h, iniDir, iniEsq, iniHp, iniIframe;};
 struct inimigo
-	ar = {0,0,380,500,64,64,1,0,5},
-	ar2 = {0,0,630,200,64,64,0,1,5};
+	ar = {0,0,380,500,64,64,1,0,5,0},
+	ar2 = {0,0,630,200,64,64,0,1,5,0};
 	
 //Variáveis Globais
 int sai    = 0;
@@ -170,9 +170,10 @@ void aranha1() {
 		iFrame = msecs;
 		dano();
 	}
-	if (colidir(p.x, p.y + 31 , ar.x + 15 , ar.y + 19, 24 , 35 , 30 , 36) && key[KEY_Z])
+	if (colidir(p.x, p.y + 31 , ar.x + 15 , ar.y + 19, 64 , 35 , 30 , 36) && key[KEY_Z] && msecs - ar.iniIframe >= 500){
 		ar.iniHp--;
-	
+		ar.iniIframe = msecs;
+	}
 	//DRAW
 	if(ar.iniHp > 0)
 		masked_blit(aranha, buffer, ar.wx,ar.wy,ar.x,ar.y,ar.w,ar.h);		
@@ -196,8 +197,10 @@ void aranha2() {
 		iFrame = msecs;
 		dano();
 	}
-	if (colidir(p.x, p.y + 31 , ar2.x + 15 , ar2.y + 19, 24 , 35 , 30 , 36) && key[KEY_Z])
+	if (colidir(p.x, p.y + 31 , ar2.x + 15 , ar2.y + 19, 64 , 35 , 30 , 36) && key[KEY_Z] && msecs - ar2.iniIframe >= 500){
 		ar2.iniHp--;
+		ar2.iniIframe = msecs;
+	}
 	//DRAW
 	if(ar2.iniHp > 0)
 		masked_blit(aranha, buffer, ar2.wx,ar2.wy,ar2.x,ar2.y,ar2.w,ar2.h);	
@@ -265,9 +268,9 @@ int i,j;
 				for(j=0; j < 18; j++){
 						masked_blit(imagem,buffer,bloco[i][j].wx,bloco[i][j].wy,bloco[i][j].x,bloco[i][j].y,bloco[i][j].w,bloco[i][j].h);
 						if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y, p.w-24,40 , bloco[i][j].w-24 ,50)){
-						if(mp[i][j] != 3 && mp[i][j] != 9 && mp[i][j] != 4 && mp[i][j] != 5 && mp[i][j] != 2 && mp[i][j] != 18 && mp[i][j] != 21 && mp[i][j] != 22 ){
-						p.y = bloco[i][j].y - p.h;
-						caindo = 0;
+							if(mp[i][j] != 3 && mp[i][j] != 9 && mp[i][j] != 4 && mp[i][j] != 5 && mp[i][j] != 2 && mp[i][j] != 18 && mp[i][j] != 21 && mp[i][j] != 22){
+								p.y = bloco[i][j].y - p.h;
+								caindo = 0;
 						}
 					}
 				}
@@ -290,6 +293,8 @@ void dano(){
 		marcador = 0;
 		ar.iniHp = 5;
 		ar2.iniHp = 5;
+		ar.iniIframe = 0;
+		ar2.iniIframe = 0;
 		menu1();
 	}
 }
