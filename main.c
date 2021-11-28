@@ -365,9 +365,15 @@ int i,j;
 				for(j=0; j < 18; j++){
 						masked_blit(imagem,buffer,bloco2[i][j].wx,bloco2[i][j].wy,bloco2[i][j].x,bloco2[i][j].y,bloco2[i][j].w,bloco2[i][j].h);
 						if (colidir(p.x, p.y+30 , bloco2[i][j].x , bloco2[i][j].y, p.w-24,40 , bloco2[i][j].w-24 ,50)){
-							if(mp2[i][j] != 3 && mp2[i][j] != 9 && mp2[i][j] != 4 && mp2[i][j] != 5 && mp2[i][j] != 2 && mp2[i][j] != 18 && mp2[i][j] != 21 && mp2[i][j] != 22){
+							if(mp2[i][j] != 3 && mp2[i][j] != 9 && mp2[i][j] != 4 && mp2[i][j] != 5 && mp2[i][j] != 2 && mp2[i][j] != 18 && mp2[i][j] != 19 && mp2[i][j] != 20 && mp2[i][j] != 21 && mp2[i][j] != 22){
 								p.y = bloco2[i][j].y - p.h;
 								caindo = 0;
+						}
+						else if(mp2[i][j] == 19 || mp2[i][j] == 20){
+								if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y + 30, p.w-24,40 , bloco[i][j].w-24 ,50)){
+									caindo = 0;
+									respawn();
+								}
 						}
 					}
 				}
