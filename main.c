@@ -22,6 +22,7 @@ void aranha2();
 void dano();
 void hpicon();
 void coin();
+void respawn();
 
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
@@ -338,15 +339,22 @@ int i,j;
 				for(j=0; j < 18; j++){
 						masked_blit(imagem,buffer,bloco[i][j].wx,bloco[i][j].wy,bloco[i][j].x,bloco[i][j].y,bloco[i][j].w,bloco[i][j].h);
 						if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y, p.w-24,40 , bloco[i][j].w-24 ,50)){
-							if(mp[i][j] != 3 && mp[i][j] != 9 && mp[i][j] != 4 && mp[i][j] != 5 && mp[i][j] != 2 && mp[i][j] != 18 && mp[i][j] != 21 && mp[i][j] != 22){
+							if(mp[i][j] != 3 && mp[i][j] != 9 && mp[i][j] != 4 && mp[i][j] != 5 && mp[i][j] != 2 && mp[i][j] != 18 && mp[i][j] != 19 && mp[i][j] != 20 && mp[i][j] != 21 && mp[i][j] != 22){
 								p.y = bloco[i][j].y - p.h;
 								caindo = 0;
+							}
+							else if(mp[i][j] == 19 || mp[i][j] == 20){
+								if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y + 30, p.w-24,40 , bloco[i][j].w-24 ,50)){
+									caindo = 0;
+									respawn();
+								}
+							}
 						}
 					}
 				}
 			}	
 	
-}
+
 void blocos2(){
 int i,j;			
 			for(i=0;i<14;i++){
@@ -382,6 +390,12 @@ void dano(){
 		menu1();
 	}
 }
+//respawnar no inicio da fase
+void respawn(){
+	p.y = 444;
+	p.x = 0;
+	dano();
+}
 
 void control(){
 	//printsDEBUG
@@ -410,14 +424,14 @@ void control(){
 	if(key[KEY_ENTER] && hp == 3 && morreu == 1){
 		morreu = 0;
 	}	
+	
+	/*DEBUG VIDA
 	if(hp > 0 && key[KEY_H])
-		dano();
+		dano();	*/
+		
 	//DANO AO CAIR
-	if(morreu == 0 && p.y > height+64){
-		p.y = 444;
-		p.x = 0;
-		dano();	
-	}		
+	if(morreu == 0 && p.y > height+64)
+		respawn();
 	
 	if(msecs - marcador >= 450 && key[KEY_Z]&& !pulando && caindo==0){
 		marcadorAtq = msecs;
