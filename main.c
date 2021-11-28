@@ -68,6 +68,7 @@ int marcador, marcadorS;
 int ctn;
 int mapaTroca;
 int moedaC;
+int contadorI;
 
 BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda;
 SAMPLE *som, *ataqueS, *puloS;
@@ -87,6 +88,7 @@ int main() {
 	marcadorS = msecs;
 	mapaTroca = 1;
 	moedaC = 0;
+	contadorI=0;
 	//Variáveis Locais
 	buffer = create_bitmap(width, height);
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
@@ -178,7 +180,9 @@ int main() {
 END_OF_MAIN();
 
 void coin() {
-	if(moedaC == 0)masked_blit(moeda, buffer, c.wx,c.wy,c.x,c.y,c.w,c.h);
+	if(moedaC == 0)masked_blit(moeda, buffer,c.wx+(contadorI/3)*25,c.wy,c.x,c.y,24,24);
+	contadorI++;
+	if(contadorI > 15)contadorI = 0;
 	if(colidir(p.x, p.y+30 , c.x , c.y, p.w-24,40 , c.w-24 ,25)){ 
 		moedaC++;
 		mapaTroca = 2;
