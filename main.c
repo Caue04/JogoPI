@@ -11,26 +11,33 @@ END_OF_FUNCTION(milisecsCount)
 
 void sair();
 void blocos();
+void blocos2();
 void control(); 
 void mapa();
+void mapa2();
 void menu1();
 void pause();
 void aranha1();
 void aranha2();
 void dano();
 void hpicon();
+void coin();
 
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
 struct obj{int wx, wy, x, y, w, h;};
 struct obj
 	p = {0,0,0,500,64,64},
-	bloco[14][18];
+	c = {0,0,25,320,25,25},
+	bloco[14][18],
+	bloco2[14][18];
 
 struct inimigo{int wx, wy, x, y, w, h, iniDir, iniEsq, iniHp, iniIframe;};
 struct inimigo
 	ar = {0,0,380,500,64,64,1,0,5,0},
 	ar2 = {0,0,630,200,64,64,0,1,5,0};
+	
+	
 	
 //Variáveis Globais
 int sai    = 0;
@@ -57,8 +64,10 @@ int marcadorAtq;
 int iFrame;
 int marcador, marcadorS;
 int ctn;
+int mapaTroca;
+int moedaC;
 
-BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar;
+BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda;
 SAMPLE *som, *ataqueS, *puloS;
 
 int main() {
@@ -74,9 +83,12 @@ int main() {
 	int i,j;
 	marcador = msecs;
 	marcadorS = msecs;
+	mapaTroca = 1;
+	moedaC = 0;
 	//Variáveis Locais
 	buffer = create_bitmap(width, height);
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
+	moeda  = load_bitmap("sprites/coin.bmp", NULL);
 	aranha = load_bitmap("sprites/spider.bmp", NULL);
 	vida1  = load_bitmap("sprites/HP1.bmp" , NULL);
 	vida2  = load_bitmap("sprites/HP2.bmp" , NULL);
@@ -105,6 +117,19 @@ int main() {
 		}
 	}
 		mapa();
+	
+	for(i = 0; i < 14; i++) 	{
+		for(j = 0; j < 18; j++){
+			bloco2[i][j].y = i*50;
+			bloco2[i][j].x = j*50;
+			bloco2[i][j].w = 50;
+			bloco2[i][j].h = 50;
+			bloco2[i][j].wy =256;
+		}
+	}
+		mapa2();
+		
+		
 	while (!(sai || key[KEY_ESC]))
 	{		
 		
@@ -113,10 +138,13 @@ int main() {
 			play_sample(sPause, 225,128,1000,0);			
 		}
 		
-		if(str == 0)menu1();
-		blocos();
 		control();
-		if(str == 1)masked_blit(imagem, buffer, p.wx + nTile*64,p.wy + dir*64,p.x,p.y,p.w,p.h);
+		if(str == 0)menu1();
+		if(mapaTroca == 1)blocos();
+		if(mapaTroca == 2)blocos2();
+		if(str == 1){ 
+		masked_blit(imagem, buffer, p.wx + nTile*64,p.wy + dir*64,p.x,p.y,p.w,p.h);
+		coin();
 		aranha1();
 		aranha2();
 		hpicon();
@@ -124,6 +152,7 @@ int main() {
 		pause();
 		rest(45);
 		clear(buffer);
+	}
 	}
 			
 
@@ -143,6 +172,14 @@ int main() {
 }
 
 END_OF_MAIN();
+
+void coin() {
+	if(moedaC == 0)masked_blit(moeda, buffer, c.wx,c.wy,c.x,c.y,c.w,c.h);
+	if(colidir(p.x, p.y+30 , c.x , c.y, p.w-24,40 , c.w-24 ,25)){ 
+		moedaC++;
+		mapaTroca = 2;
+	}
+}
 
 void hpicon() {
 	if (hp == 3)draw_sprite(buffer, vida3, 830, 30);
@@ -175,8 +212,12 @@ void aranha1() {
 		ar.iniIframe = msecs;
 	}
 	//DRAW
-	if(ar.iniHp > 0)
-		masked_blit(aranha, buffer, ar.wx,ar.wy,ar.x,ar.y,ar.w,ar.h);		
+	if(ar.iniHp > 0 && mapaTroca == 1) 
+		masked_blit(aranha, buffer, ar.wx,ar.wy,ar.x,ar.y,ar.w,ar.h);
+		
+			
+
+			
 }
 void aranha2() {
 	//MOVIMENTO
@@ -202,8 +243,9 @@ void aranha2() {
 		ar2.iniIframe = msecs;
 	}
 	//DRAW
-	if(ar2.iniHp > 0)
+	if(ar2.iniHp > 0 && mapaTroca == 1)
 		masked_blit(aranha, buffer, ar2.wx,ar2.wy,ar2.x,ar2.y,ar2.w,ar2.h);	
+		
 }
 
 void pause() {
@@ -261,6 +303,31 @@ void mapa(){
 		}
 	}	
 }
+void mapa2(){
+	int i,j;
+	char map2[14][18] = {{4,5,4,5,4,5,4,5,4,5,4,5,4,5,4,5,4,5},
+						{2,18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2,18},
+						{18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2},
+						{2,18,2,18,2,18,23,24,23,18,2,18,2,18,2,18,2,18},
+						{18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2},
+						{2,18,2,23,2,18,2,18,2,18,23,18,2,24,23,24,2,18},
+						{18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2},
+						{23,24,23,18,2,18,2,20,2,18,2,18,2,24,2,18,2,18},
+						{18,2,18,2,18,2,24,23,24,2,24,2,18,2,18,2,18,2},
+						{2,18,2,18,23,18,2,18,2,18,2,18,2,18,2,18,2,18},
+						{18,2,18,2,18,2,18,2,18,2,18,2,10,10,10,2,18,2},
+						{10,10,10,10,10,10,10,10,10,10,10,10,6,6,6,20,19,20},
+						{6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6},
+						{6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6}};
+
+	for(i = 0; i < 14; i++){
+		for(j = 0; j < 18; j++){
+			if(map2[i][j]) bloco2[i][j].wx = (map2[i][j] - 1) * bloco2[i][j].w;
+			else bloco2[i][j].x = out;
+			mp[i][j] = map2[i][j];
+		}
+	}	
+}
 
 void blocos(){
 int i,j;			
@@ -270,6 +337,21 @@ int i,j;
 						if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y, p.w-24,40 , bloco[i][j].w-24 ,50)){
 							if(mp[i][j] != 3 && mp[i][j] != 9 && mp[i][j] != 4 && mp[i][j] != 5 && mp[i][j] != 2 && mp[i][j] != 18 && mp[i][j] != 21 && mp[i][j] != 22){
 								p.y = bloco[i][j].y - p.h;
+								caindo = 0;
+						}
+					}
+				}
+			}	
+	
+}
+void blocos2(){
+int i,j;			
+			for(i=0;i<14;i++){
+				for(j=0; j < 18; j++){
+						masked_blit(imagem,buffer,bloco2[i][j].wx,bloco2[i][j].wy,bloco2[i][j].x,bloco2[i][j].y,bloco2[i][j].w,bloco2[i][j].h);
+						if (colidir(p.x, p.y+30 , bloco2[i][j].x , bloco2[i][j].y, p.w-24,40 , bloco2[i][j].w-24 ,50)){
+							if(mp[i][j] != 3 && mp[i][j] != 9 && mp[i][j] != 4 && mp[i][j] != 5 && mp[i][j] != 2 && mp[i][j] != 18 && mp[i][j] != 21 && mp[i][j] != 22){
+								p.y = bloco2[i][j].y - p.h;
 								caindo = 0;
 						}
 					}
@@ -320,6 +402,7 @@ void control(){
 	if(key[KEY_ENTER]){
 		str = 1;
 	}
+	
 	textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "HP = %d", hp , time);
 	//SISTEMA DE HP
 	if(key[KEY_ENTER] && hp == 3 && morreu == 1){
