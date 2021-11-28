@@ -53,6 +53,7 @@ int pulando = 0;
 int vup = 15;
 int pLimit = 0;
 char mp[14][18];
+char mp2[14][18];
 int out = -500;
 int ataque = 0;
 int ult;
@@ -146,8 +147,8 @@ int main() {
 		if(str == 1){ 
 		masked_blit(imagem, buffer, p.wx + nTile*64,p.wy + dir*64,p.x,p.y,p.w,p.h);
 		coin();
-		aranha1();
-		aranha2();
+		if(mapaTroca == 1)aranha1();
+		if(mapaTroca == 1)aranha2();
 		hpicon();
 		if(pausa == 1)draw_sprite(buffer, pausar,0,0);
 		draw_sprite(screen, buffer, 0, 0);
@@ -214,7 +215,7 @@ void aranha1() {
 		ar.iniIframe = msecs;
 	}
 	//DRAW
-	if(ar.iniHp > 0 && mapaTroca == 1) 
+	if(ar.iniHp > 0) 
 		masked_blit(aranha, buffer, ar.wx,ar.wy,ar.x,ar.y,ar.w,ar.h);
 		
 			
@@ -326,14 +327,14 @@ void mapa2(){
 		for(j = 0; j < 18; j++){
 			if(map2[i][j]) bloco2[i][j].wx = (map2[i][j] - 1) * bloco2[i][j].w;
 			else bloco2[i][j].x = out;
-			mp[i][j] = map2[i][j];
+			mp2[i][j] = map2[i][j];
 		}
 	}	
 }
 
 void blocos(){
 int i,j;			
-			for(i=0;i<14;i++){
+		for(i=0;i<14;i++){
 				for(j=0; j < 18; j++){
 						masked_blit(imagem,buffer,bloco[i][j].wx,bloco[i][j].wy,bloco[i][j].x,bloco[i][j].y,bloco[i][j].w,bloco[i][j].h);
 						if (colidir(p.x, p.y+30 , bloco[i][j].x , bloco[i][j].y, p.w-24,40 , bloco[i][j].w-24 ,50)){
@@ -352,14 +353,13 @@ int i,j;
 				for(j=0; j < 18; j++){
 						masked_blit(imagem,buffer,bloco2[i][j].wx,bloco2[i][j].wy,bloco2[i][j].x,bloco2[i][j].y,bloco2[i][j].w,bloco2[i][j].h);
 						if (colidir(p.x, p.y+30 , bloco2[i][j].x , bloco2[i][j].y, p.w-24,40 , bloco2[i][j].w-24 ,50)){
-							if(mp[i][j] != 3 && mp[i][j] != 9 && mp[i][j] != 4 && mp[i][j] != 5 && mp[i][j] != 2 && mp[i][j] != 18 && mp[i][j] != 21 && mp[i][j] != 22){
+							if(mp2[i][j] != 3 && mp2[i][j] != 9 && mp2[i][j] != 4 && mp2[i][j] != 5 && mp2[i][j] != 2 && mp2[i][j] != 18 && mp2[i][j] != 21 && mp2[i][j] != 22){
 								p.y = bloco2[i][j].y - p.h;
 								caindo = 0;
 						}
 					}
 				}
 			}	
-	
 }
 
 void dano(){
