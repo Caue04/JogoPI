@@ -23,6 +23,9 @@ void dano();
 void hpicon();
 void coin();
 void respawn();
+void roboIni();
+void roboIni2();
+void roboIni3();
 
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
@@ -49,7 +52,13 @@ int pausa = 0;
 int width  = 900;
 int height = 700;
 int dir = 0;
+int dir2 = 0;
 int nTile = 0;
+int dir3 = 0;
+int nTile3 = 0;
+int nTile2 = 0;
+int dir4 = 0;
+int nTile4 = 0;
 int vly = 0;
 int grv = 4;
 int caindo = 1;
@@ -74,7 +83,7 @@ int moedaC;
 int contadorI;
 int Smapacount;
 
-BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda;
+BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda, *inim2;
 SAMPLE *som, *ataqueS, *puloS, *Scoin, *Smapa, *dAranha;
 
 int main() {
@@ -97,6 +106,7 @@ int main() {
 	//Variáveis Locais
 	buffer = create_bitmap(width, height);
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
+	inim2 = load_bitmap("sprites/ini2.bmp", NULL);
 	pausar = load_bitmap("sprites/pause.bmp", NULL);
 	moeda  = load_bitmap("sprites/coin.bmp", NULL);
 	aranha = load_bitmap("sprites/spider.bmp", NULL);
@@ -160,6 +170,9 @@ int main() {
 		coin();
 		if(mapaTroca == 1)aranha1();
 		if(mapaTroca == 1)aranha2();
+		if(mapaTroca == 2)roboIni();
+		if(mapaTroca == 2)roboIni2();
+		if(mapaTroca == 2)roboIni3();
 		hpicon();
 		if(pausa == 1)draw_sprite(buffer, pausar,0,0);
 		draw_sprite(screen, buffer, 0, 0);
@@ -206,6 +219,100 @@ void hpicon() {
 	if (hp == 1)draw_sprite(buffer, vida1, 830, 30);	
 }
 
+void roboIni() {
+	if(rb.x < 850 && rb.iniDir == 1)
+		rb.x += 10;
+	else if(rb.x == 850){
+		rb.iniDir = 0;
+		rb.iniEsq = 1;
+	}
+	if(rb.x > 730 && rb.iniEsq == 1)
+		rb.x -= 10;
+	else if(rb.x == 730){
+		rb.iniEsq = 0;
+		rb.iniDir = 1;
+	}
+	
+	if (colidir(p.x + 20, p.y + 31 , rb.x + 15 , rb.y + 19, 24 , 35 , 30 , 36) && msecs - iFrame >= 1000 && rb.iniHp > 0){
+		iFrame = msecs;
+		dano();
+	}
+	if (colidir(p.x, p.y + 31 , rb.x + 15 , rb.y + 19, 64 , 35 , 30 , 36) && key[KEY_Z] && msecs - rb.iniIframe >= 500){
+		rb.iniHp--;
+		rb.iniIframe = msecs;
+	}
+	
+	if(rb.iniHp > 0) {
+		nTile4++;
+		if(nTile4 == 12)nTile4 = 0;
+		masked_blit(inim2, buffer, rb.wx + (nTile4/3) * 64,rb.wy + dir4 * 64,rb.x,rb.y,rb.w,rb.h);
+		if(rb.iniDir == 1)dir4 = 1;
+		else dir4 =0;	
+	}
+}
+void roboIni2() {
+	if(rb2.x < 850 && rb2.iniDir == 1)
+		rb2.x += 10;
+	else if(rb2.x == 850){
+		rb2.iniDir = 0;
+		rb2.iniEsq = 1;
+	}
+	if(rb2.x > 730 && rb2.iniEsq == 1)
+		rb2.x -= 10;
+	else if(rb.x == 730){
+		rb2.iniEsq = 0;
+		rb2.iniDir = 1;
+	}
+	
+	if (colidir(p.x + 20, p.y + 31 , rb2.x + 15 , rb2.y + 19, 24 , 35 , 30 , 36) && msecs - iFrame >= 1000 && rb2.iniHp > 0){
+		iFrame = msecs;
+		dano();
+	}
+	if (colidir(p.x, p.y + 31 , rb2.x + 15 , rb2.y + 19, 64 , 35 , 30 , 36) && key[KEY_Z] && msecs - rb2.iniIframe >= 500){
+		rb2.iniHp--;
+		rb2.iniIframe = msecs;
+	}
+	
+	if(rb2.iniHp > 0){ 
+		nTile3++;
+		if(nTile3 == 12)nTile3 = 0;
+		masked_blit(inim2, buffer, rb2.wx + (nTile3/3) * 64,rb2.wy + dir3 * 64,rb2.x,rb2.y,rb2.w,rb2.h);
+		if(rb2.iniDir == 1)dir3 = 1;
+		else dir3 =0;
+	}
+}
+void roboIni3() {
+	
+	if(rb3.x < 100 && rb3.iniDir == 1)
+		rb3.x += 10;
+	else if(rb3.x == 100){
+		rb3.iniDir = 0;
+		rb3.iniEsq = 1;
+	}
+	if(rb3.x > 0 && rb3.iniEsq == 1)
+		rb3.x -= 10;
+	else if(rb3.x == 0){
+		rb3.iniEsq = 0;
+		rb3.iniDir = 1;
+	}
+	
+	if (colidir(p.x + 20, p.y + 31 , rb3.x + 15 , rb3.y + 19, 24 , 35 , 30 , 36) && msecs - iFrame >= 1000 && rb3.iniHp > 0){
+		iFrame = msecs;
+		dano();
+	}
+	if (colidir(p.x, p.y + 31 , rb3.x + 15 , rb3.y + 19, 64 , 35 , 30 , 36) && key[KEY_Z] && msecs - rb3.iniIframe >= 500){
+		rb3.iniHp--;
+		rb3.iniIframe = msecs;
+	}
+	
+	if(rb3.iniHp > 0){
+		nTile2++;
+		if(nTile2 == 12)nTile2 = 0;
+		masked_blit(inim2, buffer, rb3.wx + (nTile2/3) * 64,rb3.wy + dir2 * 64,rb3.x,rb3.y,rb3.w,rb3.h);
+		if(rb3.iniDir == 1)dir2 = 1;
+		else dir2 =0;
+	}
+}
 
 void aranha1() {
 	//MOVIMENTO
@@ -264,16 +371,6 @@ void aranha2() {
 	//DRAW
 	if(ar2.iniHp > 0 && mapaTroca == 1)
 		masked_blit(aranha, buffer, ar2.wx,ar2.wy,ar2.x,ar2.y,ar2.w,ar2.h);	
-}
-
-void rb1(){
-	
-}
-void rb2(){
-	
-}
-void rb3(){
-	
 }
 
 void pause() {
