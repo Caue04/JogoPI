@@ -26,6 +26,7 @@ void respawn();
 void roboIni();
 void roboIni2();
 void roboIni3();
+void atirando();
 
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
@@ -43,7 +44,12 @@ struct inimigo
 	rb	= {0,0,840,586,64,64,0,1,3,0},
 	rb2	= {0,0,840,186,64,64,0,1,3,0},
 	rb3	= {0,0,0,36,64,64,1,0,3,0};
-	
+
+struct projetil{int x, y, w, h, pisou, atirou;};
+struct projetil
+	r1p = {0,0,64,64,0,0},
+	r2p = {0,0,64,64,0,0},
+	r3p = {0,0,64,64,0,0};
 	
 	
 //Variáveis Globais
@@ -83,7 +89,7 @@ int moedaC;
 int contadorI;
 int Smapacount;
 
-BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda, *inim2;
+BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda, *inim2, *tiro;
 SAMPLE *som, *ataqueS, *puloS, *Scoin, *Smapa, *dAranha;
 
 int main() {
@@ -107,6 +113,7 @@ int main() {
 	buffer = create_bitmap(width, height);
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
 	inim2 = load_bitmap("sprites/ini2.bmp", NULL);
+	tiro = load_bitmap("sprites/projectile.bmp", NULL);
 	pausar = load_bitmap("sprites/pause.bmp", NULL);
 	moeda  = load_bitmap("sprites/coin.bmp", NULL);
 	aranha = load_bitmap("sprites/spider.bmp", NULL);
@@ -175,6 +182,8 @@ int main() {
 		if(mapaTroca == 2)roboIni3();
 		hpicon();
 		if(pausa == 1)draw_sprite(buffer, pausar,0,0);
+		if(r1p.atirou == 1 || r2p.atirou == 1 || r3p.atirou == 1)
+			atirando();
 		draw_sprite(screen, buffer, 0, 0);
 		pause();
 		rest(45);
@@ -191,6 +200,8 @@ int main() {
 	destroy_bitmap(vida2);
 	destroy_bitmap(vida3);
 	destroy_bitmap(aranha);
+	destroy_bitmap(inim2);
+	destroy_bitmap(tiro);
 	destroy_bitmap(pausar);
 	destroy_sample(som);
 	destroy_sample(ataqueS);
@@ -199,6 +210,35 @@ int main() {
 }
 
 END_OF_MAIN();
+void atirando(){
+	if(r1p.atirou == 1 && mapaTroca == 2){
+		if(r1p.x > -200)
+			r1p.x -=25;
+		else{
+			r1p.atirou = 0;
+			r1p.pisou = 0;
+		}
+		draw_sprite(buffer, tiro, r1p.x, r1p.y);
+	}
+	if(r2p.atirou == 1 && mapaTroca == 2){
+		if(r2p.x > -200)
+			r2p.x -=25;
+		else{
+			r2p.atirou = 0;
+			r2p.pisou = 0;
+		}
+		draw_sprite(buffer, tiro, r2p.x, r2p.y);
+	}
+	if(r3p.atirou == 1 && mapaTroca == 2){
+		if(r3p.x < 1000)
+			r3p.x +=25;
+		else{
+			r3p.atirou = 0;
+			r3p.pisou = 0;
+		}
+		draw_sprite(buffer, tiro, r3p.x, r3p.y);
+	}
+}
 
 void coin() {
 	if(moedaC == 0)masked_blit(moeda, buffer,c.wx+(contadorI/3)*25,c.wy,c.x,c.y,24,24);
@@ -249,6 +289,14 @@ void roboIni() {
 		if(rb.iniDir == 1)dir4 = 1;
 		else dir4 =0;	
 	}
+	
+	if(rb.y == p.y && !r1p.pisou){
+		r1p.pisou = 1;
+		r1p.x = rb.x;
+		r1p.y = rb.y + 10;
+	}	
+	if (r1p.pisou == 1)
+		r1p.atirou = 1;
 }
 void roboIni2() {
 	if(rb2.x < 850 && rb2.iniDir == 1)
@@ -280,6 +328,14 @@ void roboIni2() {
 		if(rb2.iniDir == 1)dir3 = 1;
 		else dir3 =0;
 	}
+	
+	if(rb2.y == p.y && !r2p.pisou){
+		r2p.pisou = 1;
+		r2p.x = rb2.x;
+		r2p.y = rb2.y + 10;
+	}	
+	if (r2p.pisou == 1)
+		r2p.atirou = 1;
 }
 void roboIni3() {
 	
@@ -312,6 +368,14 @@ void roboIni3() {
 		if(rb3.iniDir == 1)dir2 = 1;
 		else dir2 =0;
 	}
+	
+	if(rb3.y == p.y && !r3p.pisou){
+		r3p.pisou = 1;
+		r3p.x = rb3.x;
+		r3p.y = rb3.y + 10;
+	}	
+	if (r3p.pisou == 1)
+		r3p.atirou = 1;
 }
 
 void aranha1() {
@@ -512,6 +576,7 @@ void blocos2(){
 	textprintf_centre_ex(buffer, font, 100, 240, 0xffffff,-1, "p.x:%d", p.x);	
 }
 
+
 void dano(){
 	if(hp > 0)
 		hp--;
@@ -529,6 +594,12 @@ void dano(){
 		ar2.iniHp = 5;
 		ar.iniIframe = 0;
 		ar2.iniIframe = 0;
+		rb.iniHp = 3;
+		rb2.iniHp = 3;
+		rb3.iniHp = 3;
+		rb.iniIframe = 0;
+		rb2.iniIframe = 0;
+		rb3.iniIframe = 0;
 		mapaTroca = 1;
 		moedaC = 0;
 		menu1();
