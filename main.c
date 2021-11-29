@@ -72,7 +72,7 @@ int contadorI;
 int Smapacount;
 
 BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda;
-SAMPLE *som, *ataqueS, *puloS, *Scoin, *Smapa;
+SAMPLE *som, *ataqueS, *puloS, *Scoin, *Smapa, *dAranha;
 
 int main() {
 	
@@ -108,12 +108,13 @@ int main() {
 		LOCK_VARIABLE(msecs);
 		install_int_ex(msecsCount, MSEC_TO_TIMER(1));
 
-	menu   = load_bitmap("sprites/menu.bmp", NULL);
-	som    = load_sample("somMenu.wav");
-	Scoin    = load_sample("coinS.wav");
-	Smapa    = load_sample("trocaS.wav");
-	ataqueS    = load_sample("ataque.wav");
-	puloS    = load_sample("pulo.wav");
+	menu   	= load_bitmap("sprites/menu.bmp", NULL);
+	som    	= load_sample("somMenu.wav");
+	Scoin   = load_sample("coinS.wav");
+	Smapa   = load_sample("trocaS.wav");
+	ataqueS = load_sample("ataque.wav");
+	puloS   = load_sample("pulo.wav");
+	dAranha = load_sample("spiderHited.wav"); 
 	SAMPLE *sPause  = load_sample("pause.wav");
 	
 	for(i = 0; i < 14; i++) 	{
@@ -223,6 +224,8 @@ void aranha1() {
 		dano();
 	}
 	if (colidir(p.x, p.y + 31 , ar.x + 15 , ar.y + 19, 64 , 35 , 30 , 36) && key[KEY_Z] && msecs - ar.iniIframe >= 500){
+		if(ar.iniHp > 0)
+			play_sample(dAranha, 100, 110, 1000, 0);
 		ar.iniHp--;
 		ar.iniIframe = msecs;
 	}
@@ -256,7 +259,9 @@ void aranha2() {
 		dano();
 	}
 	if (colidir(p.x, p.y + 31 , ar2.x + 15 , ar2.y + 19, 64 , 35 , 30 , 36) && key[KEY_Z] && msecs - ar2.iniIframe >= 500){
-		ar2.iniHp--;
+		if(ar2.iniHp > 0)
+			play_sample(dAranha, 100, 110, 1000, 0);
+		ar2.iniHp--;	
 		ar2.iniIframe = msecs;
 	}
 	//DRAW
