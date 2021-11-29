@@ -35,8 +35,11 @@ struct obj
 
 struct inimigo{int wx, wy, x, y, w, h, iniDir, iniEsq, iniHp, iniIframe;};
 struct inimigo
-	ar = {0,0,380,500,64,64,1,0,5,0},
-	ar2 = {0,0,630,200,64,64,0,1,5,0};
+	ar 	= {0,0,380,500,64,64,1,0,5,0},
+	ar2 = {0,0,630,200,64,64,0,1,5,0},
+	rb	= {0,0,840,586,64,64,0,1,3,0},
+	rb2	= {0,0,840,186,64,64,0,1,3,0},
+	rb3	= {0,0,0,36,64,64,1,0,3,0};
 	
 	
 	
@@ -232,8 +235,6 @@ void aranha1() {
 	//DRAW
 	if(ar.iniHp > 0) 
 		masked_blit(aranha, buffer, ar.wx,ar.wy,ar.x,ar.y,ar.w,ar.h);
-	
-	textprintf_centre_ex(buffer, font, 100, 220, 0xffffff,-1, "p.y:%d", p.y);
 }
 void aranha2() {
 	//MOVIMENTO
@@ -263,7 +264,16 @@ void aranha2() {
 	//DRAW
 	if(ar2.iniHp > 0 && mapaTroca == 1)
 		masked_blit(aranha, buffer, ar2.wx,ar2.wy,ar2.x,ar2.y,ar2.w,ar2.h);	
-		
+}
+
+void rb1(){
+	
+}
+void rb2(){
+	
+}
+void rb3(){
+	
 }
 
 void pause() {
@@ -399,7 +409,10 @@ void blocos2(){
 				}
 			}
 		}
-	}	
+	}
+		
+	textprintf_centre_ex(buffer, font, 100, 220, 0xffffff,-1, "p.y:%d", p.y);
+	textprintf_centre_ex(buffer, font, 100, 240, 0xffffff,-1, "p.x:%d", p.x);	
 }
 
 void dano(){
@@ -440,10 +453,10 @@ void respawn(){
 
 void control(){
 	//printsDEBUG
-	textprintf_centre_ex(buffer, font, 100, 100, 0xffffff,-1, "Timer:%d", msecs);
-	textprintf_centre_ex(buffer, font, 100, 200, 0xffffff,-1, "Ar1 HP:%d", ar.iniHp);
-	textprintf_centre_ex(buffer, font, 100, 220, 0xffffff,-1, "Ar2 HP:%d", ar2.iniHp);
-	textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "HP = %d", hp , time);
+	//textprintf_centre_ex(buffer, font, 100, 100, 0xffffff,-1, "Timer:%d", msecs);
+	//textprintf_centre_ex(buffer, font, 100, 200, 0xffffff,-1, "Ar1 HP:%d", ar.iniHp);
+	//textprintf_centre_ex(buffer, font, 100, 220, 0xffffff,-1, "Ar2 HP:%d", ar2.iniHp);
+	//textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "HP = %d", hp , time);
 	
 	if(key[KEY_M] && msecs - marcadorS >= 750 ){
 		marcadorS = msecs;
