@@ -90,7 +90,7 @@ int contadorI;
 int Smapacount;
 
 BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda, *inim2, *tiro;
-SAMPLE *som, *ataqueS, *puloS, *Scoin, *Smapa, *dAranha;
+SAMPLE *som, *ataqueS, *puloS, *dRobo, *Scoin, *Smapa, *dAranha, *sTiro, *dIni2;
 
 int main() {
 	
@@ -135,6 +135,9 @@ int main() {
 	ataqueS = load_sample("ataque.wav");
 	puloS   = load_sample("pulo.wav");
 	dAranha = load_sample("spiderHited.wav"); 
+	dIni2	= load_sample("ini2Hited.wav");
+	sTiro 	= load_sample("lasersfx.wav");
+	dRobo 	= load_sample("roboHitted.wav");
 	SAMPLE *sPause  = load_sample("pause.wav");
 	
 	for(i = 0; i < 14; i++) 	{
@@ -206,6 +209,10 @@ int main() {
 	destroy_sample(som);
 	destroy_sample(ataqueS);
 	destroy_sample(puloS);
+	destroy_sample(dRobo);
+	destroy_sample(dAranha);
+	destroy_sample(dIni2);
+	destroy_sample(sTiro);
 	return 0;
 }
 
@@ -213,7 +220,7 @@ END_OF_MAIN();
 void atirando(){
 	if(r1p.atirou == 1 && mapaTroca == 2){
 		if(r1p.x > -200)
-			r1p.x -=25;
+			r1p.x -=35;
 		else{
 			r1p.atirou = 0;
 			r1p.pisou = 0;
@@ -222,7 +229,7 @@ void atirando(){
 	}
 	if(r2p.atirou == 1 && mapaTroca == 2){
 		if(r2p.x > -200)
-			r2p.x -=25;
+			r2p.x -=35;
 		else{
 			r2p.atirou = 0;
 			r2p.pisou = 0;
@@ -231,13 +238,19 @@ void atirando(){
 	}
 	if(r3p.atirou == 1 && mapaTroca == 2){
 		if(r3p.x < 1000)
-			r3p.x +=25;
+			r3p.x +=35;
 		else{
 			r3p.atirou = 0;
 			r3p.pisou = 0;
 		}
 		draw_sprite(buffer, tiro, r3p.x, r3p.y);
 	}
+	if(morreu == 1){
+		r1p.x = -20;
+		r2p.x = -20;
+		r3p.x = -20;
+	}
+	
 }
 
 void coin() {
@@ -278,6 +291,7 @@ void roboIni() {
 		dano();
 	}
 	if (colidir(p.x, p.y + 31 , rb.x + 15 , rb.y + 19, 64 , 35 , 30 , 36) && key[KEY_Z] && msecs - rb.iniIframe >= 500){
+		play_sample(dIni2, 100, 110, 1000, 0);
 		rb.iniHp--;
 		rb.iniIframe = msecs;
 	}
@@ -290,13 +304,18 @@ void roboIni() {
 		else dir4 =0;	
 	}
 	
-	if(rb.y == p.y && !r1p.pisou){
+	if(rb.y == p.y && !r1p.pisou && rb.iniHp > 0 && rb.x - p.x > 200){
 		r1p.pisou = 1;
 		r1p.x = rb.x;
 		r1p.y = rb.y + 10;
+		play_sample(sTiro, 100, 110, 1000, 0);
 	}	
 	if (r1p.pisou == 1)
 		r1p.atirou = 1;
+	if(colidir(p.x + 20, p.y + 31, r1p.x + 25, r1p.y + 22, 23, 34, 14, 16)  && msecs - iFrame >= 1000 && rb.iniHp > 0){
+		iFrame = msecs;
+		dano();
+	}
 }
 void roboIni2() {
 	if(rb2.x < 850 && rb2.iniDir == 1)
@@ -317,6 +336,7 @@ void roboIni2() {
 		dano();
 	}
 	if (colidir(p.x, p.y + 31 , rb2.x + 15 , rb2.y + 19, 64 , 35 , 30 , 36) && key[KEY_Z] && msecs - rb2.iniIframe >= 500){
+		play_sample(dIni2, 100, 110, 1000, 0);
 		rb2.iniHp--;
 		rb2.iniIframe = msecs;
 	}
@@ -329,34 +349,26 @@ void roboIni2() {
 		else dir3 =0;
 	}
 	
-	if(rb2.y == p.y && !r2p.pisou){
+	if(rb2.y == p.y && !r2p.pisou && rb2.iniHp > 0 && rb2.x - p.x > 128){
 		r2p.pisou = 1;
 		r2p.x = rb2.x;
 		r2p.y = rb2.y + 10;
+		play_sample(sTiro, 100, 110, 1000, 0);
 	}	
 	if (r2p.pisou == 1)
 		r2p.atirou = 1;
+	if(colidir(p.x + 20, p.y + 31, r2p.x + 25, r2p.y + 22, 23, 34, 14, 16)  && msecs - iFrame >= 1000 && rb2.iniHp > 0){
+		iFrame = msecs;
+		dano();
+	}
 }
 void roboIni3() {
-	
-	if(rb3.x < 100 && rb3.iniDir == 1)
-		rb3.x += 10;
-	else if(rb3.x == 100){
-		rb3.iniDir = 0;
-		rb3.iniEsq = 1;
-	}
-	if(rb3.x > 0 && rb3.iniEsq == 1)
-		rb3.x -= 10;
-	else if(rb3.x == 0){
-		rb3.iniEsq = 0;
-		rb3.iniDir = 1;
-	}
-	
 	if (colidir(p.x + 20, p.y + 31 , rb3.x + 15 , rb3.y + 19, 24 , 35 , 30 , 36) && msecs - iFrame >= 1000 && rb3.iniHp > 0){
 		iFrame = msecs;
 		dano();
 	}
 	if (colidir(p.x, p.y + 31 , rb3.x + 15 , rb3.y + 19, 64 , 35 , 30 , 36) && key[KEY_Z] && msecs - rb3.iniIframe >= 500){
+		play_sample(dIni2, 100, 110, 1000, 0);
 		rb3.iniHp--;
 		rb3.iniIframe = msecs;
 	}
@@ -369,13 +381,18 @@ void roboIni3() {
 		else dir2 =0;
 	}
 	
-	if(rb3.y == p.y && !r3p.pisou){
+	if(rb3.y == p.y && !r3p.pisou && rb3.iniHp > 0){
 		r3p.pisou = 1;
 		r3p.x = rb3.x;
 		r3p.y = rb3.y + 10;
+		play_sample(sTiro, 100, 110, 1000, 0);
 	}	
 	if (r3p.pisou == 1)
 		r3p.atirou = 1;
+	if(colidir(p.x + 20, p.y + 31, r3p.x + 25, r3p.y + 22, 23, 34, 14, 16)  && msecs - iFrame >= 1000 && rb3.iniHp > 0){
+		iFrame = msecs;
+		dano();
+	}
 }
 
 void aranha1() {
@@ -496,7 +513,7 @@ void mapa2(){
 	int i,j;
 	char map2[14][18] = {{4,5,4,5,4,5,4,5,4,5,4,5,4,5,4,5,4,5},
 						{2,18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2,18},
-						{24,23,24,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2},
+						{24,23,24,23,24,2,18,2,18,2,18,2,18,2,18,2,18,2},
 						{2,18,2,18,2,18,2,18,2,18,2,18,2,18,2,18,2,18},
 						{18,2,18,2,24,23,18,2,18,2,18,2,18,2,18,2,18,2},
 						{2,18,2,18,2,18,23,24,23,18,2,18,23,18,2,24,23,24},
@@ -580,6 +597,7 @@ void blocos2(){
 void dano(){
 	if(hp > 0)
 		hp--;
+		play_sample(dRobo, 225,128,1000,0);
 	if(hp == 0){
 		stop_sample(som);
 		morreu = 1;
@@ -600,6 +618,9 @@ void dano(){
 		rb.iniIframe = 0;
 		rb2.iniIframe = 0;
 		rb3.iniIframe = 0;
+		r1p.atirou = 0;
+		r2p.atirou = 0;
+		r3p.atirou = 0;
 		mapaTroca = 1;
 		moedaC = 0;
 		menu1();
