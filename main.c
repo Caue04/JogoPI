@@ -69,9 +69,10 @@ int ctn;
 int mapaTroca;
 int moedaC;
 int contadorI;
+int Smapacount;
 
 BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda;
-SAMPLE *som, *ataqueS, *puloS;
+SAMPLE *som, *ataqueS, *puloS, *Scoin, *Smapa;
 
 int main() {
 	
@@ -89,6 +90,7 @@ int main() {
 	mapaTroca = 1;
 	moedaC = 0;
 	contadorI=0;
+	Smapacount = 0;
 	//Variáveis Locais
 	buffer = create_bitmap(width, height);
 	imagem = load_bitmap("sprites/robosprite.bmp", NULL);
@@ -108,6 +110,8 @@ int main() {
 
 	menu   = load_bitmap("sprites/menu.bmp", NULL);
 	som    = load_sample("somMenu.wav");
+	Scoin    = load_sample("coinS.wav");
+	Smapa    = load_sample("trocaS.wav");
 	ataqueS    = load_sample("ataque.wav");
 	puloS    = load_sample("pulo.wav");
 	SAMPLE *sPause  = load_sample("pause.wav");
@@ -184,7 +188,10 @@ void coin() {
 	contadorI++;
 	if(contadorI > 15)contadorI = 0;
 	if(colidir(p.x, p.y+30 , c.x , c.y, p.w-24,40 , c.w-24 ,25)){ 
-		moedaC++;
+		moedaC++;	
+		if(moedaC == 1)play_sample(Scoin, 225,128,1000,0);
+	}	
+	if( moedaC >= 1){
 		mapaTroca = 2;
 	}
 }
@@ -367,7 +374,8 @@ void blocos(){
 }
 
 void blocos2(){
-	int i,j;			
+	int i,j;
+		
 	for(i=0;i<14;i++){
 		for(j=0; j < 18; j++){
 			masked_blit(imagem,buffer,bloco2[i][j].wx,bloco2[i][j].wy,bloco2[i][j].x,bloco2[i][j].y,bloco2[i][j].w,bloco2[i][j].h);
@@ -410,6 +418,8 @@ void dano(){
 		ar2.iniHp = 5;
 		ar.iniIframe = 0;
 		ar2.iniIframe = 0;
+		mapaTroca = 1;
+		moedaC = 0;
 		menu1();
 	}
 }
