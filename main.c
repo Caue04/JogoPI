@@ -28,16 +28,19 @@ void roboIni();
 void roboIni2();
 void roboIni3();
 void atirando();
-void chave();
+void arquivo();
 
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
 struct obj{int wx, wy, x, y, w, h;};
 struct obj
-	p = {0,0,0,500,64,64},
-	c = {0,0,163,220,25,25},
+	p  = {0,0,0,500,64,64},
+	c  = {0,0,163,220,25,25},
 	c1 = {0,0,360,120,25,25},
 	c2 = {0,0,10,300,25,25},
+	a  = {0,0,360,120,25,25},
+	a1 = {0,0,10,300,25,25},
+    a2 = {0,0,163,220,25,25},
 	bloco[14][18],
 	bloco2[14][18];
 
@@ -54,12 +57,7 @@ struct projetil{int x, y, w, h, pisou, atirou;};
 struct projetil
 	r1p = {0,0,64,64,0,0},
 	r2p = {0,0,64,64,0,0},
-	r3p = {0,0,64,64,0,0};
-
-struct key{int wx, wy, x, y, w, h;};
-struct key
-		k = {0,0,360,120,25,25};	
-	
+	r3p = {0,0,64,64,0,0};	
 	
 //Variáveis Globais
 int sai    = 0;
@@ -101,10 +99,11 @@ int marcador, marcadorS;
 int ctn;
 int mapaTroca;
 int moedaC, moedaT;
+int arquivoC, arquivoT;
 int contadorI;
 int Smapacount;
 
-BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda, *inim2, *tiro, *educ;
+BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda, *inim2, *tiro, *educ, *venceu, *arquivoS;
 SAMPLE *som, *ataqueS, *puloS, *dRobo, *Scoin, *Smapa, *dAranha, *sTiro, *dIni2;
 
 int main() {
@@ -138,6 +137,8 @@ int main() {
 	vida3  = load_bitmap("sprites/HP3.bmp" , NULL);
 	pausar = load_bitmap("sprites/pause.bmp", NULL);
 	educ   = load_bitmap("sprites/educ.bmp", NULL);
+	venceu = load_bitmap("sprites/win.bmp", NULL);
+	arquivoS = load_bitmap("sprites/documents.bmp", NULL);
 		
 		//SET TIMER
 		msecs = 0;
@@ -195,6 +196,7 @@ int main() {
 		if(str == 1){ 
 		masked_blit(imagem, buffer, p.wx + nTile*64,p.wy + dir*64,p.x,p.y,p.w,p.h);
 		coin();
+		arquivo();
 		if(mapaTroca == 1)aranha1();
 		if(mapaTroca == 1)aranha2();
 		if(mapaTroca == 2)aranha3();
@@ -309,6 +311,43 @@ void coin() {
 		}
 	}
 	if(moedaT == 3)mapaTroca = 2;	
+}
+}
+
+//arquivo
+void arquivo() {
+	if(arquivoC == 0 && arquivoT == 0){draw_sprite(arquivoS, buffer, 0,0);
+	if(colidir(p.x, p.y+30 , a.x , a.y, p.w-24,40 , a.w-24 ,25) && arquivoC == 0){
+		arquivoC = 1; 	
+		if(arquivoC == 1){
+			play_sample(Scoin, 225,128,1000,0);
+			arquivoC=0;
+			arquivoT=1;
+		}
+	}
+}
+		if(arquivoC == 0 && arquivoT == 1){draw_sprite(arquivoS, buffer, 0,0);
+	if(colidir(p.x, p.y+30 , a1.x , a1.y, p.w-24,40 , a1.w-24 ,25) && arquivoC == 0){
+		arquivoC = 2; 	
+		if(arquivoC == 2){
+			play_sample(Scoin, 225,128,1000,0);
+			arquivoC=0;
+			arquivoT=2;
+		}
+	}
+}	
+		if(arquivoC == 0 && arquivoT == 2){draw_sprite(arquivoS, buffer, 0,0);
+	if(colidir(p.x, p.y+30 , a2.x , a2.y, p.w-24,40 , a2.w-24 ,25) && arquivoC == 0){
+		arquivoC = 3; 	
+		if(arquivoC == 3){
+			play_sample(Scoin, 225,128,1000,0);
+			arquivoC=0;
+			arquivoT=3;
+		}
+	}
+	if(arquivoT == 3){
+		draw_sprite(venceu, buffer, 0,0);
+ }	
 }
 }
 
