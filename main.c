@@ -29,7 +29,6 @@ void roboIni2();
 void roboIni3();
 void atirando();
 void arquivo();
-void vitoria();
 
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
@@ -103,7 +102,6 @@ int moedaC, moedaT;
 int arquivoC, arquivoT;
 int contadorI;
 int Smapacount;
-int victory = 0;
 
 BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda, *inim2, *tiro, *educ, *venceu, *arquivoS;
 SAMPLE *som, *ataqueS, *puloS, *dRobo, *Scoin, *Smapa, *dAranha, *sTiro, *dIni2;
@@ -347,22 +345,12 @@ void arquivo() {
 			arquivoT=3;
 		}
 	}
-	if(arquivoT == 3 && victory != 1){
-		vitoria();
+	if(arquivoT == 3){
+		draw_sprite(buffer, venceu, 0,0);
  }	
 }
 }
-void vitoria(){
-	victory = 1;
-	while(victory ==  1){
-		draw_sprite(buffer, venceu, 0,0);
-		clear(buffer);
-		if(key[KEY_ENTER]){
-			str = 0;
-		}	
-	
-	}
-}
+
 void hpicon() {
 	if (hp == 3)draw_sprite(buffer, vida3, 830, 30);
 	if (hp == 2)draw_sprite(buffer, vida2, 830, 30);
