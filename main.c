@@ -205,6 +205,7 @@ int main() {
 		if(mapaTroca == 2)roboIni();
 		if(mapaTroca == 2)roboIni2();
 		if(mapaTroca == 2)roboIni3();
+		if(mapaTroca == 3)draw_sprite(buffer,venceu, 0, 0);
 		hpicon();
 		textprintf_centre_ex(buffer, font, 500, 220, 0xffffff,-1, "moeda:%d", moedaC);
 		if(pausa == 1){draw_sprite(buffer, pausar,0,0); textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "APERTE ESPACO PARA VOLTAR");}
@@ -347,7 +348,7 @@ void arquivo() {
 			arquivoT=3;
 		}
 	}
-
+	if(arquivoT == 3)mapaTroca = 3;
 }
 }
 
