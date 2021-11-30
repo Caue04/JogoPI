@@ -38,9 +38,9 @@ struct obj
 	c  = {0,0,163,220,25,25},
 	c1 = {0,0,360,120,25,25},
 	c2 = {0,0,10,300,25,25},
-	a  = {0,0,360,120,25,25},
-	a1 = {0,0,10,300,25,25},
-    a2 = {0,0,163,220,25,25},
+	arq1  = {0,0,360,120,64,64},
+	arq2 = {0,0,10,300,64,64},
+    arq3 = {0,0,163,220,64,64},
 	bloco[14][18],
 	bloco2[14][18];
 
@@ -122,6 +122,8 @@ int main() {
 	mapaTroca = 1;
 	moedaC = 0;
 	moedaT = 0;
+	arquivoC = 0;
+	arquivoT = 0;
 	contadorI=0;
 	Smapacount = 0;
 	//Variáveis Locais
@@ -196,7 +198,7 @@ int main() {
 		if(str == 1){ 
 		masked_blit(imagem, buffer, p.wx + nTile*64,p.wy + dir*64,p.x,p.y,p.w,p.h);
 		coin();
-		arquivo();
+		if(mapaTroca == 2)arquivo();
 		if(mapaTroca == 1)aranha1();
 		if(mapaTroca == 1)aranha2();
 		if(mapaTroca == 2)aranha3();
@@ -316,8 +318,8 @@ void coin() {
 
 //arquivo
 void arquivo() {
-	if(arquivoC == 0 && arquivoT == 0){draw_sprite(buffer, arquivoS, a.x,a.y);
-	if(colidir(p.x, p.y+30 , a.x , a.y, p.w-24,40 , a.w-24 ,25) && arquivoC == 0){
+	if(arquivoC == 0 && arquivoT == 0 && mapaTroca==2){draw_sprite(buffer,arquivoS, arq1.x,arq1.y);
+	if(colidir(p.x, p.y+30 , arq1.x , arq1.y, p.w-24,40 , arq1.w-24 ,64) && arquivoC == 0){
 		arquivoC = 1; 	
 		if(arquivoC == 1){
 			play_sample(Scoin, 225,128,1000,0);
@@ -326,8 +328,8 @@ void arquivo() {
 		}
 	}
 }
-		if(arquivoC == 0 && arquivoT == 1){draw_sprite(buffer, arquivoS, a1.x,a1.y);
-	if(colidir(p.x, p.y+30 , a1.x , a1.y, p.w-24,40 , a1.w-24 ,25) && arquivoC == 0){
+		if(arquivoC == 0 && arquivoT == 1 && mapaTroca==2){draw_sprite(buffer,arquivoS, arq2.x,arq2.y);
+	if(colidir(p.x, p.y+30 , arq2.x , arq2.y, p.w-24,40 , arq2.w-24 ,64) && arquivoC == 0){
 		arquivoC = 2; 	
 		if(arquivoC == 2){
 			play_sample(Scoin, 225,128,1000,0);
@@ -336,8 +338,8 @@ void arquivo() {
 		}
 	}
 }	
-		if(arquivoC == 0 && arquivoT == 2){draw_sprite(buffer, arquivoS, a2.x,a2.y);
-	if(colidir(p.x, p.y+30 , a2.x , a2.y, p.w-24,40 , a2.w-24 ,25) && arquivoC == 0){
+		if(arquivoC == 0 && arquivoT == 2 && mapaTroca==2){draw_sprite(buffer,arquivoS, arq3.x, arq3.y);
+	if(colidir(p.x, p.y+30 , arq3.x , arq3.y, p.w-24,40 , arq3.w-24 ,64) && arquivoC == 0){
 		arquivoC = 3; 	
 		if(arquivoC == 3){
 			play_sample(Scoin, 225,128,1000,0);
@@ -345,9 +347,7 @@ void arquivo() {
 			arquivoT=3;
 		}
 	}
-	if(arquivoT == 3){
-		draw_sprite(buffer, venceu, 0,0);
- }	
+
 }
 }
 
