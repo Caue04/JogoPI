@@ -19,6 +19,7 @@ void menu1();
 void pause();
 void aranha1();
 void aranha2();
+void aranha3();
 void dano();
 void hpicon();
 void coin();
@@ -41,6 +42,7 @@ struct inimigo{int wx, wy, x, y, w, h, iniDir, iniEsq, iniHp, iniIframe;};
 struct inimigo
 	ar 	= {0,0,380,500,64,64,1,0,5,0},
 	ar2 = {0,0,630,200,64,64,0,1,5,0},
+	ar3 = {0,0,50,286,64,64,1,0,5,0},
 	rb	= {0,0,840,586,64,64,0,1,3,0},
 	rb2	= {0,0,840,186,64,64,0,1,3,0},
 	rb3	= {0,0,0,36,64,64,1,0,3,0};
@@ -181,6 +183,7 @@ int main() {
 		coin();
 		if(mapaTroca == 1)aranha1();
 		if(mapaTroca == 1)aranha2();
+		if(mapaTroca == 2)aranha3();
 		if(mapaTroca == 2)roboIni();
 		if(mapaTroca == 2)roboIni2();
 		if(mapaTroca == 2)roboIni3();
@@ -454,6 +457,37 @@ void aranha2() {
 	if(ar2.iniHp > 0 && mapaTroca == 1)
 		masked_blit(aranha, buffer, ar2.wx,ar2.wy,ar2.x,ar2.y,ar2.w,ar2.h);	
 }
+
+void aranha3() {
+	//MOVIMENTO
+	if(ar3.x < 100 && ar3.iniDir == 1)
+		ar3.x += 10;
+	else if(ar3.x == 200){
+		ar3.iniDir = 0;
+		ar3.iniEsq = 1;
+	}
+	if(ar3.x > 150 && ar2.iniEsq == 1)
+		ar3.x -= 10;
+	else if(ar3.x == 150){
+		ar3.iniEsq = 1;
+		ar3.iniDir = 0;
+	}
+	//COLISÃO PLAYER e DANO
+	if (colidir(p.x + 20, p.y + 31 , ar3.x + 15 , ar3.y + 19, 24 , 35 , 30 , 36) && msecs - iFrame >= 1000 && ar3.iniHp > 0){
+		iFrame = msecs;
+		dano();
+	}
+	if (colidir(p.x, p.y + 31 , ar3.x + 15 , ar3.y + 19, 64 , 35 , 30 , 36) && key[KEY_Z] && msecs - ar3.iniIframe >= 500){
+		if(ar3.iniHp > 0)
+			play_sample(dAranha, 100, 110, 1000, 0);
+		ar3.iniHp--;	
+		ar3.iniIframe = msecs;
+	}
+	//DRAW
+	if(ar3.iniHp > 0 && mapaTroca == 2)
+		masked_blit(aranha, buffer, ar3.wx,ar3.wy,ar3.x,ar3.y,ar3.w,ar3.h);	
+}
+
 
 void pause() {
 	while ( key[KEY_SPACE] && pausa) {
