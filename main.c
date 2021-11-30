@@ -75,9 +75,11 @@ int nTile2 = 0;
 int dir4 = 0;
 int dir5 = 0;
 int dir6 = 0;
+int dir7 = 0;
 int nTile4 = 0;
 int nTile5 = 0;
 int nTile6 = 0;
+int nTile7 = 0;
 int vly = 0;
 int grv = 4;
 int caindo = 1;
@@ -506,7 +508,7 @@ void aranha2() {
 		nTile6++;
 		
 		if(nTile6 == 6)nTile6 = 0;
-		masked_blit(aranha, buffer, ar2.wx + nTile6 * 64,ar2.wy + dir6 * 64,ar2.x,ar2.y,ar2.w,ar.h);
+		masked_blit(aranha, buffer, ar2.wx + nTile6 * 64,ar2.wy + dir6 * 64,ar2.x,ar2.y,ar2.w,ar2.h);
 		if(ar2.iniDir == 0)dir6 = 1;
 		else dir6 =0;
 	}
@@ -539,9 +541,16 @@ void aranha3() {
 		ar3.iniIframe = msecs;
 	}
 	//DRAW
-	if(ar3.iniHp > 0 && mapaTroca == 2)
-		masked_blit(aranha, buffer, ar3.wx,ar3.wy,ar3.x,ar3.y,ar3.w,ar3.h);	
+		if(ar3.iniHp > 0){
+		nTile7++;
+		
+		if(nTile7 == 6)nTile7 = 0;
+		masked_blit(aranha, buffer, ar3.wx + nTile7 * 64,ar3.wy + dir7 * 64,ar3.x,ar3.y,ar3.w,ar3.h);
+		if(ar3.iniDir == 0)dir7 = 1;
+		else dir7 =0;
+	}
 }
+
 
 
 void pause() {
@@ -719,6 +728,7 @@ void dano(){
 		r3p.atirou = 0;
 		mapaTroca = 1;
 		moedaC = 0;
+		moedaT = 0;
 		menu1();
 	}
 }
