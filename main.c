@@ -28,6 +28,7 @@ void roboIni();
 void roboIni2();
 void roboIni3();
 void atirando();
+void chave();
 
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
@@ -35,6 +36,7 @@ struct obj{int wx, wy, x, y, w, h;};
 struct obj
 	p = {0,0,0,500,64,64},
 	c = {0,0,360,120,25,25},
+	c2 = {0,0,500,120,25,25},
 	bloco[14][18],
 	bloco2[14][18];
 
@@ -52,6 +54,10 @@ struct projetil
 	r1p = {0,0,64,64,0,0},
 	r2p = {0,0,64,64,0,0},
 	r3p = {0,0,64,64,0,0};
+
+struct key{int wx, wy, x, y, w, h;};
+struct key
+		k = {0,0,360,120,25,25};	
 	
 	
 //Variáveis Globais
@@ -188,6 +194,7 @@ int main() {
 		if(mapaTroca == 2)roboIni2();
 		if(mapaTroca == 2)roboIni3();
 		hpicon();
+		textprintf_centre_ex(buffer, font, 500, 220, 0xffffff,-1, "moeda:%d", moedaC);
 		if(pausa == 1){draw_sprite(buffer, pausar,0,0); textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "APERTE ESPACO PARA VOLTAR");}
 		if(r1p.atirou == 1 || r2p.atirou == 1 || r3p.atirou == 1)
 			atirando();
@@ -261,11 +268,20 @@ void coin() {
 	if(moedaC == 0)masked_blit(moeda, buffer,c.wx+(contadorI/3)*25,c.wy,c.x,c.y,24,24);
 	contadorI++;
 	if(contadorI > 15)contadorI = 0;
-	if(colidir(p.x, p.y+30 , c.x , c.y, p.w-24,40 , c.w-24 ,25)){ 
+	if(colidir(p.x, p.y+30 , c.x , c.y, p.w-24,40 , c.w-24 ,25)){
+		moedaC = 0; 
 		moedaC++;	
 		if(moedaC == 1)play_sample(Scoin, 225,128,1000,0);
 	}	
-	if( moedaC >= 1){
+	if(moedaC == 0)masked_blit(moeda, buffer,c2.wx+(contadorI/3)*25,c2.wy,c2.x,c2.y,24,24);
+	contadorI++;
+	if(contadorI > 15)contadorI = 0;
+	if(colidir(p.x, p.y+30 , c2.x , c2.y, p.w-24,40 , c2.w-24 ,25)){
+		moedaC = 1; 
+		moedaC++;	
+		if(moedaC == 1)play_sample(Scoin, 225,128,1000,0);
+	}
+	if( moedaC >= 5){
 		mapaTroca = 2;
 	}
 }
