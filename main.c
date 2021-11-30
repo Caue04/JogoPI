@@ -73,7 +73,11 @@ int dir3 = 0;
 int nTile3 = 0;
 int nTile2 = 0;
 int dir4 = 0;
+int dir5 = 0;
+int dir6 = 0;
 int nTile4 = 0;
+int nTile5 = 0;
+int nTile6 = 0;
 int vly = 0;
 int grv = 4;
 int caindo = 1;
@@ -461,8 +465,16 @@ void aranha1() {
 		ar.iniIframe = msecs;
 	}
 	//DRAW
-	if(ar.iniHp > 0) 
-		masked_blit(aranha, buffer, ar.wx,ar.wy,ar.x,ar.y,ar.w,ar.h);
+		
+		if(ar.iniHp > 0){
+		nTile5++;
+		
+		if(nTile5 == 6)nTile5 = 0;
+		masked_blit(aranha, buffer, ar.wx + nTile5 * 64,ar.wy + dir5 * 64,ar.x,ar.y,ar.w,ar.h);
+		if(ar.iniDir == 0)dir5 = 1;
+		else dir5 =0;
+	}
+		
 }
 void aranha2() {
 	//MOVIMENTO
@@ -490,9 +502,16 @@ void aranha2() {
 		ar2.iniIframe = msecs;
 	}
 	//DRAW
-	if(ar2.iniHp > 0 && mapaTroca == 1)
-		masked_blit(aranha, buffer, ar2.wx,ar2.wy,ar2.x,ar2.y,ar2.w,ar2.h);	
+		if(ar2.iniHp > 0){
+		nTile6++;
+		
+		if(nTile6 == 6)nTile6 = 0;
+		masked_blit(aranha, buffer, ar2.wx + nTile6 * 64,ar2.wy + dir6 * 64,ar2.x,ar2.y,ar2.w,ar.h);
+		if(ar2.iniDir == 0)dir6 = 1;
+		else dir6 =0;
+	}
 }
+
 
 void aranha3() {
 	//MOVIMENTO
