@@ -655,7 +655,7 @@ void dano(){
 	if(hp == 0){
 		stop_sample(som);
 		morreu = 1;
-		p.y = 444;
+		p.y = 500;
 		p.x = 0;
 		hp = 3;
 		msecs = 0;
@@ -683,11 +683,15 @@ void dano(){
 //respawnar no inicio da fase
 void respawn(){
 	if(mapaTroca == 1){
-		p.y = 444;
+		pulando = 0;
+		caindo = 1;
+		p.y = 500;
 		p.x = 0;
 		dano();
 	}
 	else if(mapaTroca == 2){
+		pulando = 0;
+		caindo = 1;
 		p.y = 286;
 		p.x = 10;
 		dano();
@@ -721,13 +725,12 @@ void control(){
 	if(key[KEY_ENTER] && hp == 3 && morreu == 1){
 		morreu = 0;
 	}	
-	
 	/*DEBUG VIDA
 	if(hp > 0 && key[KEY_H])
 		dano();	*/
 		
 	//DANO AO CAIR
-	if(morreu == 0 && p.y > height+64)
+	if(morreu == 0 && p.y >= height+64)
 		respawn();
 	
 	if(msecs - marcador >= 450 && key[KEY_Z]&& !pulando && caindo==0){
