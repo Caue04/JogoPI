@@ -29,6 +29,7 @@ void roboIni2();
 void roboIni3();
 void atirando();
 void arquivo();
+void vitoria();
 
 int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 
@@ -102,6 +103,7 @@ int moedaC, moedaT;
 int arquivoC, arquivoT;
 int contadorI;
 int Smapacount;
+int victory = 0;
 
 BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda, *inim2, *tiro, *educ, *venceu, *arquivoS;
 SAMPLE *som, *ataqueS, *puloS, *dRobo, *Scoin, *Smapa, *dAranha, *sTiro, *dIni2;
@@ -138,7 +140,7 @@ int main() {
 	pausar = load_bitmap("sprites/pause.bmp", NULL);
 	educ   = load_bitmap("sprites/educ.bmp", NULL);
 	venceu = load_bitmap("sprites/win.bmp", NULL);
-	arquivoS = load_bitmap("sprites/documents.bmp", NULL);
+	arquivoS = load_bitmap("sprites/alexandre.bmp", NULL);
 		
 		//SET TIMER
 		msecs = 0;
@@ -316,7 +318,7 @@ void coin() {
 
 //arquivo
 void arquivo() {
-	if(arquivoC == 0 && arquivoT == 0){draw_sprite(arquivoS, buffer, 0,0);
+	if(arquivoC == 0 && arquivoT == 0){draw_sprite(buffer, arquivoS, a.x,a.y);
 	if(colidir(p.x, p.y+30 , a.x , a.y, p.w-24,40 , a.w-24 ,25) && arquivoC == 0){
 		arquivoC = 1; 	
 		if(arquivoC == 1){
@@ -326,7 +328,7 @@ void arquivo() {
 		}
 	}
 }
-		if(arquivoC == 0 && arquivoT == 1){draw_sprite(arquivoS, buffer, 0,0);
+		if(arquivoC == 0 && arquivoT == 1){draw_sprite(buffer, arquivoS, a1.x,a1.y);
 	if(colidir(p.x, p.y+30 , a1.x , a1.y, p.w-24,40 , a1.w-24 ,25) && arquivoC == 0){
 		arquivoC = 2; 	
 		if(arquivoC == 2){
@@ -336,7 +338,7 @@ void arquivo() {
 		}
 	}
 }	
-		if(arquivoC == 0 && arquivoT == 2){draw_sprite(arquivoS, buffer, 0,0);
+		if(arquivoC == 0 && arquivoT == 2){draw_sprite(buffer, arquivoS, a2.x,a2.y);
 	if(colidir(p.x, p.y+30 , a2.x , a2.y, p.w-24,40 , a2.w-24 ,25) && arquivoC == 0){
 		arquivoC = 3; 	
 		if(arquivoC == 3){
@@ -345,12 +347,22 @@ void arquivo() {
 			arquivoT=3;
 		}
 	}
-	if(arquivoT == 3){
-		draw_sprite(venceu, buffer, 0,0);
+	if(arquivoT == 3 && victory != 1){
+		vitoria();
  }	
 }
 }
-
+void vitoria(){
+	victory = 1;
+	while(victory ==  1){
+		draw_sprite(buffer, venceu, 0,0);
+		clear(buffer);
+		if(key[KEY_ENTER]){
+			str = 0;
+		}	
+	
+	}
+}
 void hpicon() {
 	if (hp == 3)draw_sprite(buffer, vida3, 830, 30);
 	if (hp == 2)draw_sprite(buffer, vida2, 830, 30);
