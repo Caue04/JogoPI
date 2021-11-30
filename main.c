@@ -628,7 +628,6 @@ void blocos(){
 			}	
 			if(mp[i][j] == 19 || mp[i][j] == 20){
 				if (colidir(p.x, p.y+30 , bloco[i][j].x + 5 , bloco[i][j].y + 30, p.w-24,40 , bloco[i][j].w-30 ,50)){
-					caindo = 0;
 					respawn();
 				}
 			}		
@@ -656,7 +655,6 @@ void blocos2(){
 			}		
 			if(mp2[i][j] == 19 || mp2[i][j] == 20){
 				if (colidir(p.x, p.y+30 , bloco2[i][j].x + 5, bloco2[i][j].y + 30, p.w-24,40 , bloco2[i][j].w-30 ,50)){
-					caindo = 0;
 					respawn();
 				}
 			}
@@ -671,11 +669,14 @@ void blocos2(){
 void dano(){
 	if(hp > 0)
 		hp--;
+		caindo = 1;
+		pulando = 0;
 		play_sample(dRobo, 225,128,1000,0);
 	if(hp == 0){
 		stop_sample(som);
 		morreu = 1;
-		p.y = 444;
+		caindo = 1;
+		p.y = 500;
 		p.x = 0;
 		hp = 3;
 		msecs = 0;
@@ -703,7 +704,7 @@ void dano(){
 //respawnar no inicio da fase
 void respawn(){
 	if(mapaTroca == 1){
-		p.y = 444;
+		p.y = 500;
 		p.x = 0;
 		dano();
 	}
