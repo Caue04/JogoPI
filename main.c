@@ -207,7 +207,6 @@ int main() {
 		if(mapaTroca == 2)roboIni3();
 		if(mapaTroca == 3)draw_sprite(buffer,venceu, 0, 0);
 		hpicon();
-		textprintf_centre_ex(buffer, font, 500, 220, 0xffffff,-1, "moeda:%d", moedaC);
 		if(pausa == 1){draw_sprite(buffer, pausar,0,0); textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "APERTE ESPACO PARA VOLTAR");}
 		if(r1p.atirou == 1 || r2p.atirou == 1 || r3p.atirou == 1)
 			atirando();
@@ -728,9 +727,6 @@ void blocos2(){
 			}
 		}
 	}
-		
-	textprintf_centre_ex(buffer, font, 100, 220, 0xffffff,-1, "p.y:%d", p.y);
-	textprintf_centre_ex(buffer, font, 100, 240, 0xffffff,-1, "p.x:%d", p.x);	
 }
 
 
@@ -808,7 +804,7 @@ void control(){
 		str = 1;
 	}
 	
-	textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "HP = %d", hp , time);
+	//textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "HP = %d", hp , time);
 	//SISTEMA DE HP
 	if(key[KEY_ENTER] && hp == 3 && morreu == 1){
 		morreu = 0;
