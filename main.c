@@ -104,7 +104,7 @@ int contadorI;
 int Smapacount;
 
 BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda, *inim2, *tiro, *educ, *venceu, *arquivoS;
-SAMPLE *som, *ataqueS, *puloS, *dRobo, *Scoin, *Smapa, *dAranha, *sTiro, *dIni2;
+SAMPLE *som, *ataqueS, *puloS, *dRobo, *Scoin, *Sdocs, *Smapa, *dAranha, *sTiro, *dIni2;
 
 int main() {
 	
@@ -151,6 +151,7 @@ int main() {
 	menu   	= load_bitmap("sprites/menu.bmp", NULL);
 	som    	= load_sample("somMenu.wav");
 	Scoin   = load_sample("coinS.wav");
+	Sdocs	= load_sample("docColect.wav");
 	Smapa   = load_sample("trocaS.wav");
 	ataqueS = load_sample("ataque.wav");
 	puloS   = load_sample("pulo.wav");
@@ -236,6 +237,8 @@ int main() {
 	destroy_sample(dAranha);
 	destroy_sample(dIni2);
 	destroy_sample(sTiro);
+	destroy_sample(Scoin);
+	destroy_sample(Sdocs);
 	return 0;
 }
 
@@ -322,7 +325,7 @@ void arquivo() {
 	if(colidir(p.x, p.y+30 , arq1.x , arq1.y, p.w-24,40 , arq1.w-24 ,64) && arquivoC == 0){
 		arquivoC = 1; 	
 		if(arquivoC == 1){
-			play_sample(Scoin, 225,128,1000,0);
+			play_sample(Sdocs, 100,128,1000,0);
 			arquivoC=0;
 			arquivoT=1;
 		}
@@ -332,7 +335,7 @@ void arquivo() {
 	if(colidir(p.x, p.y+30 , arq2.x , arq2.y, p.w-24,40 , arq2.w-24 ,64) && arquivoC == 0){
 		arquivoC = 2; 	
 		if(arquivoC == 2){
-			play_sample(Scoin, 225,128,1000,0);
+			play_sample(Sdocs, 100,128,1000,0);
 			arquivoC=0;
 			arquivoT=2;
 		}
@@ -342,7 +345,7 @@ void arquivo() {
 	if(colidir(p.x, p.y+30 , arq3.x , arq3.y, p.w-24,40 , arq3.w-24 ,64) && arquivoC == 0){
 		arquivoC = 3; 	
 		if(arquivoC == 3){
-			play_sample(Scoin, 225,128,1000,0);
+			play_sample(Sdocs, 100,128,1000,0);
 			arquivoC=0;
 			arquivoT=3;
 		}
@@ -352,9 +355,9 @@ void arquivo() {
 }
 
 void hpicon() {
-	if (hp == 3)draw_sprite(buffer, vida3, 830, 30);
-	if (hp == 2)draw_sprite(buffer, vida2, 830, 30);
-	if (hp == 1)draw_sprite(buffer, vida1, 830, 30);	
+	if (hp == 3 && mapaTroca != 3)draw_sprite(buffer, vida3, 830, 30);
+	if (hp == 2 && mapaTroca != 3)draw_sprite(buffer, vida2, 830, 30);
+	if (hp == 1 && mapaTroca != 3)draw_sprite(buffer, vida1, 830, 30);	
 }
 
 void roboIni() {
