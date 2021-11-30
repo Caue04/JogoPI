@@ -36,7 +36,8 @@ struct obj{int wx, wy, x, y, w, h;};
 struct obj
 	p = {0,0,0,500,64,64},
 	c = {0,0,360,120,25,25},
-	c2 = {0,0,500,120,25,25},
+	c1 = {0,0,500,300,25,25},
+	c2 = {0,0,600,400,25,25},
 	bloco[14][18],
 	bloco2[14][18];
 
@@ -93,7 +94,7 @@ int iFrame;
 int marcador, marcadorS;
 int ctn;
 int mapaTroca;
-int moedaC;
+int moedaC, moedaT;
 int contadorI;
 int Smapacount;
 
@@ -115,6 +116,7 @@ int main() {
 	marcadorS = msecs;
 	mapaTroca = 1;
 	moedaC = 0;
+	moedaT = 0;
 	contadorI=0;
 	Smapacount = 0;
 	//Variáveis Locais
@@ -265,25 +267,43 @@ void atirando(){
 }
 
 void coin() {
-	if(moedaC == 0)masked_blit(moeda, buffer,c.wx+(contadorI/3)*25,c.wy,c.x,c.y,24,24);
+	if(moedaC == 0 && moedaT == 0){masked_blit(moeda, buffer,c.wx+(contadorI/3)*25,c.wy,c.x,c.y,24,24);
 	contadorI++;
 	if(contadorI > 15)contadorI = 0;
-	if(colidir(p.x, p.y+30 , c.x , c.y, p.w-24,40 , c.w-24 ,25)){
-		moedaC = 0; 
-		moedaC++;	
-		if(moedaC == 1)play_sample(Scoin, 225,128,1000,0);
-	}	
-	if(moedaC == 0)masked_blit(moeda, buffer,c2.wx+(contadorI/3)*25,c2.wy,c2.x,c2.y,24,24);
+	if(colidir(p.x, p.y+30 , c.x , c.y, p.w-24,40 , c.w-24 ,25) && moedaC == 0){
+		moedaC = 1; 	
+		if(moedaC == 1){
+			play_sample(Scoin, 225,128,1000,0);
+			moedaC=0;
+			moedaT=1;
+		}
+	}
+}
+		if(moedaC == 0 && moedaT == 1){masked_blit(moeda, buffer,c1.wx+(contadorI/3)*25,c1.wy,c1.x,c1.y,24,24);
 	contadorI++;
 	if(contadorI > 15)contadorI = 0;
-	if(colidir(p.x, p.y+30 , c2.x , c2.y, p.w-24,40 , c2.w-24 ,25)){
-		moedaC = 1; 
-		moedaC++;	
-		if(moedaC == 1)play_sample(Scoin, 225,128,1000,0);
+	if(colidir(p.x, p.y+30 , c1.x , c1.y, p.w-24,40 , c1.w-24 ,25) && moedaC == 0){
+		moedaC = 2; 	
+		if(moedaC == 2){
+			play_sample(Scoin, 225,128,1000,0);
+			moedaC=0;
+			moedaT=2;
+		}
 	}
-	if( moedaC >= 5){
-		mapaTroca = 2;
+}	
+		if(moedaC == 0 && moedaT == 2){masked_blit(moeda, buffer,c2.wx+(contadorI/3)*25,c2.wy,c2.x,c2.y,24,24);
+	contadorI++;
+	if(contadorI > 15)contadorI = 0;
+	if(colidir(p.x, p.y+30 , c2.x , c2.y, p.w-24,40 , c2.w-24 ,25) && moedaC == 0){
+		moedaC = 3; 	
+		if(moedaC == 3){
+			play_sample(Scoin, 225,128,1000,0);
+			moedaC=0;
+			moedaT=3;
+		}
 	}
+	if(moedaT == 3)mapaTroca = 2;	
+}
 }
 
 void hpicon() {
