@@ -43,9 +43,9 @@ struct obj
 
 struct inimigo{int wx, wy, x, y, w, h, iniDir, iniEsq, iniHp, iniIframe;};
 struct inimigo
-	ar 	= {0,0,380,500,64,64,1,0,5,0},
-	ar2 = {0,0,630,200,64,64,0,1,5,0},
-	ar3 = {0,0,50,286,64,64,1,0,5,0},
+	ar 	= {0,0,380,503,64,64,1,0,5,0},
+	ar2 = {0,0,630,203,64,64,0,1,5,0},
+	ar3 = {0,0,220,605,64,64,1,0,5,0},
 	rb	= {0,0,840,586,64,64,0,1,3,0},
 	rb2	= {0,0,840,186,64,64,0,1,3,0},
 	rb3	= {0,0,0,36,64,64,1,0,3,0};
@@ -515,17 +515,17 @@ void aranha2() {
 
 void aranha3() {
 	//MOVIMENTO
-	if(ar3.x < 100 && ar3.iniDir == 1)
+	if(ar3.x < 350 && ar3.iniDir == 1)
 		ar3.x += 10;
-	else if(ar3.x == 200){
+	else if(ar3.x == 350){
 		ar3.iniDir = 0;
 		ar3.iniEsq = 1;
 	}
-	if(ar3.x > 150 && ar2.iniEsq == 1)
+	if(ar3.x > 220 && ar3.iniEsq == 1)
 		ar3.x -= 10;
-	else if(ar3.x == 150){
-		ar3.iniEsq = 1;
-		ar3.iniDir = 0;
+	else if(ar3.x == 220){
+		ar3.iniEsq = 0;
+		ar3.iniDir = 1;
 	}
 	//COLISÃO PLAYER e DANO
 	if (colidir(p.x + 20, p.y + 31 , ar3.x + 15 , ar3.y + 19, 24 , 35 , 30 , 36) && msecs - iFrame >= 1000 && ar3.iniHp > 0){
@@ -704,8 +704,10 @@ void dano(){
 		marcador = 0;
 		ar.iniHp = 5;
 		ar2.iniHp = 5;
+		ar3.iniHp = 5;
 		ar.iniIframe = 0;
 		ar2.iniIframe = 0;
+		ar3.iniIframe = 0;
 		rb.iniHp = 3;
 		rb2.iniHp = 3;
 		rb3.iniHp = 3;
