@@ -35,9 +35,9 @@ int colidir(int Ax, int Ay, int Bx, int By, int Aw, int Ah, int Bw, int Bh);
 struct obj{int wx, wy, x, y, w, h;};
 struct obj
 	p = {0,0,0,500,64,64},
-	c = {0,0,360,120,25,25},
-	c1 = {0,0,500,300,25,25},
-	c2 = {0,0,600,400,25,25},
+	c = {0,0,163,220,25,25},
+	c1 = {0,0,360,120,25,25},
+	c2 = {0,0,10,300,25,25},
 	bloco[14][18],
 	bloco2[14][18];
 
