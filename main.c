@@ -185,7 +185,7 @@ int main() {
 		if(mapaTroca == 2)roboIni2();
 		if(mapaTroca == 2)roboIni3();
 		hpicon();
-		if(pausa == 1)draw_sprite(buffer, pausar,0,0);
+		if(pausa == 1){draw_sprite(buffer, pausar,0,0); textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "APERTE ESPACO PARA VOLTAR");}
 		if(r1p.atirou == 1 || r2p.atirou == 1 || r3p.atirou == 1)
 			atirando();
 		draw_sprite(screen, buffer, 0, 0);
