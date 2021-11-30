@@ -89,7 +89,7 @@ int moedaC;
 int contadorI;
 int Smapacount;
 
-BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda, *inim2, *tiro;
+BITMAP *buffer, *imagem, *menu, *aranha, *vida1, *vida2, *vida3, *pausar, *moeda, *inim2, *tiro, *educ;
 SAMPLE *som, *ataqueS, *puloS, *dRobo, *Scoin, *Smapa, *dAranha, *sTiro, *dIni2;
 
 int main() {
@@ -121,6 +121,7 @@ int main() {
 	vida2  = load_bitmap("sprites/HP2.bmp" , NULL);
 	vida3  = load_bitmap("sprites/HP3.bmp" , NULL);
 	pausar = load_bitmap("sprites/pause.bmp", NULL);
+	educ   = load_bitmap("sprites/educ.bmp", NULL);
 		
 		//SET TIMER
 		msecs = 0;
@@ -470,12 +471,15 @@ void menu1(){
 	
 	while (!(sai || key[KEY_ENTER] )){
 	
-	if (time > 20) time = 0;
+	if (time > 1000) time = 0;
 	
-	draw_sprite(buffer, menu,0,0);
+	draw_sprite(buffer, educ,0,0);
 	if (time < 10)
 	
-	textprintf_centre_ex(buffer, font, width/2, height/1.3, 0xffffff,-1, "APERTE ENTER PARA INICIAR", time);
+	draw_sprite(buffer, menu,0,0);
+	if (time < 1000)
+	
+	textprintf_centre_ex(buffer, font, width/2, height/1.05, 0xffffff,-1, "APERTE ENTER APOS A LEITURA PARA INICIAR", time);
 	draw_sprite(screen, buffer, 0, 0);
 	rest(100);
 	clear(buffer);	
