@@ -40,7 +40,7 @@ struct obj
 	c2 = {0,0,10,300,25,25},
 	arq1  = {0,0,200,50,64,64},
 	arq2 = {0,0,10,300,64,64},
-    arq3 = {0,0,500,600,64,64},
+    arq3 = {0,0,340,600,64,64},
 	bloco[14][18],
 	bloco2[14][18];
 
@@ -767,6 +767,8 @@ void dano(){
 		r3p.atirou = 0;
 		mapaTroca = 1;
 		moedaC = 0;
+		arquivoC = 0;
+		arquivoT = 0;
 		moedaT = 0;
 		menu1();
 	}
